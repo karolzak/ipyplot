@@ -3,7 +3,7 @@
 ## Getting Started
 
 Checkout the [examples below](#Examples) and 
-[gear-images-examples.ipynb](notebooks/gear-images-examples.ipynb) notebook which holds end to end examples for using **IPyPlot**.
+[gear-images-examples.ipynb](https://github.com/karolzak/ipyplot/blob/master/notebooks/gear-images-examples.ipynb) notebook which holds end to end examples for using **IPyPlot**.
 
 ## Installation
 
