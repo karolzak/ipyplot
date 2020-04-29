@@ -26,9 +26,10 @@ IPyPlot offers 3 main functions which can be used for displaying images in noteb
 To start working with `IPyPlot` you need to simply import it like this:
 ```python
 import ipyplot
-```
-
-and use any of the available plotting functions:
+```  
+and use any of the available plotting functions shown below (notice execution times).  
+`images` - should be a numpy array of either `string` (image file paths), `PIL.Image` objects or `numpy.array` objects representing images  
+`labels` - should be a numpy array of `string`
 
 #### Display images in separate, interactive tabs for each class
 
