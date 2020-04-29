@@ -7,10 +7,16 @@ Checkout the [examples below](#Examples) and
 
 ## Installation
 
-So far **IPyPlot** can only be installed directly from this repo using `pip`:
+**IPyPlot** can be installed directly from this repo using `pip`:
 
 ```
 pip install git+https://github.com/karolzak/ipyplot
+```
+
+or through [PyPI](https://pypi.org/project/ipyplot/)
+
+```
+pip install ipyplot
 ```
 
 ## Usage examples
@@ -26,12 +32,12 @@ and use any of the available plotting functions:
 
 #### Display images in separate, interactive tabs for each class
 
-![](docs/example1-tabs.jpg)
+![](https://raw.githubusercontent.com/karolzak/ipyplot/master/docs/example1-tabs.jpg)
 
 #### Display a collection of images
 
-![](docs/example2-images.jpg)
+![](https://raw.githubusercontent.com/karolzak/ipyplot/master/docs/example2-images.jpg)
 
 #### Display class representations (first image for each class)
 
-![](docs/example3-classes.jpg)
+![](https://raw.githubusercontent.com/karolzak/ipyplot/master/docs/example3-classes.jpg)
