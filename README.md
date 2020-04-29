@@ -13,7 +13,7 @@ So far **IPyPlot** can only be installed directly from this repo using `pip`:
 pip install git+https://github.com/karolzak/ipyplot
 ```
 
-## Examples
+## Usage examples
 
 IPyPlot offers 3 main functions which can be used for displaying images in notebooks:
 
