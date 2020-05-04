@@ -38,7 +38,7 @@ and use any of the available plotting functions shown below (notice execution ti
 
 #### Display images in separate, interactive tabs for each class
 
-![](https://raw.githubusercontent.com/karolzak/ipyplot/master/docs/example1-tabs.jpg)
+![](https://raw.githubusercontent.com/karolzak/ipyplot/master/docs/example1-tabs.gif)
 
 #### Display a collection of images
 
