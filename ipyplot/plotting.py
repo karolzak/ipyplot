@@ -16,9 +16,9 @@ except Exception as e:
 
 def plot_class_tabs(images, labels, max_imgs_per_tab=50, img_width=220):
     """
-    Efficient and convenient way of displaying images
+    Efficient and convenient way of displaying images in interactive tabs
     grouped by labels/clusters.
-    It's using IPython.display function and HTML
+    It's using IPython.display function and HTML under the hood
 
     Args:
         images (numpy.ndarray):
