@@ -149,6 +149,8 @@ def _display(html):
 def _img_to_base64(image, max_size):
     if type(image) is np.ndarray:
         image = Image.fromarray(image)
+    elif type(image) is str or type(image) is str_:
+        image = Image.open(image)
     output = io.BytesIO()
     image = resize_with_aspect_ratio(image, max_size)
     image.save(output, format='PNG')
@@ -163,10 +165,9 @@ def _create_img_html(image, width, label):
     )
     if type(image) is str or type(image) is str_:
         html += '<h4 style="font-size: 9px; padding-left: 15px; padding-right: 15px; width: 100%%; word-wrap: break-word; white-space: normal;">%s</h4>' % (image)  # NOQA E501
-        html += '<img src="%s" style="margin: 1px; width: %spx; border: 2px solid #ddd;"/>' % (image, width)  # NOQA E501
-    else:        
-        html += '<img src="data:image/png;base64,%s" style="margin: 1px; width: %spx; border: 2px solid #ddd;"/>' % (
-            _img_to_base64(image, width*2), width)  # NOQA E501
+
+    html += '<img src="data:image/png;base64,%s" style="margin: 1px; width: %spx; border: 2px solid #ddd;"/>' % (
+        _img_to_base64(image, width*2), width)  # NOQA E501
 
     return html + '</div>'
 
