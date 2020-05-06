@@ -8,18 +8,13 @@ from PIL import Image
 
 from .img_helpers import resize_with_aspect_ratio
 
-try:
-    from IPython.display import display, HTML
-except Exception as e:
-    raise Exception('IPython not detected. Plotting without IPython is not possible')  # NOQA E501
 
-try:
-    import google.colab
-except:
-    print("WARNING! Running in Google colab environment makes some of the functions impossible to run correctly")  # NOQA E501
-
-
-def plot_class_tabs(images, labels, max_imgs_per_tab=10, img_width=220):
+def plot_class_tabs(
+        images,
+        labels,
+        max_imgs_per_tab=10,
+        img_width=220,
+        force_b64=False):
     """
     Efficient and convenient way of displaying images in interactive tabs
     grouped by labels/clusters.
@@ -37,6 +32,11 @@ def plot_class_tabs(images, labels, max_imgs_per_tab=10, img_width=220):
             Image width.
             Adjust to change the number of images per row.
             Defaults to 220.
+        force_b64 (boolean, optional):
+            You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  # NOQA E501
+            Do mind that using b64 conversion vs reading directly from filepath will be slower.  # NOQA E501
+            You might need to set this to `True` in environments like Google colab.
+            Defaults to False.
     """
     assert(len(images) == len(labels))
     assert(type(images) is np.ndarray)
@@ -44,12 +44,18 @@ def plot_class_tabs(images, labels, max_imgs_per_tab=10, img_width=220):
     assert(type(max_imgs_per_tab) is int)
     assert(type(img_width) is int)
         
-    html = _create_tabs_html(images, labels, max_imgs_per_tab, img_width)
+    html = _create_tabs_html(
+        images, labels, max_imgs_per_tab, img_width, force_b64=force_b64)
 
     _display(html)
 
 
-def plot_images(images, labels=None, max_images=30, img_width=300):
+def plot_images(
+        images,
+        labels=None,
+        max_images=30,
+        img_width=300,
+        force_b64=False):
     """
     Displays images based on the provided paths
 
@@ -66,13 +72,19 @@ def plot_images(images, labels=None, max_images=30, img_width=300):
         img_width (int, optional):
             Width of the displayed image.
             Defaults to 300.
+        force_b64 (boolean, optional):
+            You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  # NOQA E501
+            Do mind that using b64 conversion vs reading directly from filepath will be slower.  # NOQA E501
+            You might need to set this to `True` in environments like Google colab.
+            Defaults to False.
     """
     assert(type(max_images) is int)
     assert(type(img_width) is int)
 
     if labels is None:
         labels = list(range(0, len(images)))
-    html = _create_imgs_list_html(images, labels, max_images, img_width)
+    html = _create_imgs_list_html(
+        images, labels, max_images, img_width, force_b64=force_b64)
 
     _display(html)
 
@@ -80,7 +92,8 @@ def plot_images(images, labels=None, max_images=30, img_width=300):
 def plot_class_representations(
         images, labels,
         ignore_list=['-1', 'unknown'],
-        img_width=150):
+        img_width=150,
+        force_b64=False):
     """
     Function used to display first image from each cluster/class
 
@@ -95,6 +108,11 @@ def plot_class_representations(
         img_width (int, optional):
             Width of the displayed image.
             Defaults to 150.
+        force_b64 (boolean, optional):
+            You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  # NOQA E501
+            Do mind that using b64 conversion vs reading directly from filepath will be slower.  # NOQA E501
+            You might need to set this to `True` in environments like Google colab.
+            Defaults to False.
     """
     assert(len(images) == len(labels))
     assert(type(ignore_list) is list or ignore_list is None)
@@ -114,10 +132,11 @@ def plot_class_representations(
         group,
         labels=labels,
         max_images=len(group),
-        img_width=img_width)
+        img_width=img_width,
+        force_b64=force_b64)
 
 
-def _create_tabs_html(images, labels, max_imgs_per_tab, img_width):
+def _create_tabs_html(images, labels, max_imgs_per_tab, img_width, force_b64=False):
     html = '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>'  # NOQA E501
     html = '<div><ul class="nav nav-pills">'
 
@@ -137,7 +156,7 @@ def _create_tabs_html(images, labels, max_imgs_per_tab, img_width):
         active_tab = False
         img_ids = list(range(0, len(images)))
         html += ''.join([
-            _create_img_html(x, img_width, label=y)
+            _create_img_html(x, img_width, label=y, force_b64=force_b64)
             for x, y in zip(images[labels == label][:max_imgs_per_tab], img_ids)
         ])        
         html += '</div>'
@@ -163,23 +182,28 @@ def _img_to_base64(image, max_size):
     return b64
 
 
-def _create_img_html(image, width, label):
+def _create_img_html(image, width, label, force_b64=False):
     html = (
         '<div style="display: inline-block; width: %spx; text-align: center;">' % width +
         '<h4 style="font-size: 12px">%s</h4>' % label
     )
+    use_b64 = True
     if type(image) is str or type(image) is str_:
         html += '<h4 style="font-size: 9px; padding-left: 15px; padding-right: 15px; width: 100%%; word-wrap: break-word; white-space: normal;">%s</h4>' % (image)  # NOQA E501
-
-    html += '<img src="data:image/png;base64,%s" style="margin: 1px; width: %spx; border: 2px solid #ddd;"/>' % (
-        _img_to_base64(image, width*2), width)  # NOQA E501
+        if not force_b64:
+            use_b64 = False
+            html += '<img src="%s" style="margin: 1px; width: %spx; border: 2px solid #ddd;"/>' % (image, width)  # NOQA E501
+    
+    if use_b64:
+        html += '<img src="data:image/png;base64,%s" style="margin: 1px; width: %spx; border: 2px solid #ddd;"/>' % (
+            _img_to_base64(image, width*2), width)  # NOQA E501
 
     return html + '</div>'
 
 
-def _create_imgs_list_html(images, labels, max_images, img_width):
+def _create_imgs_list_html(images, labels, max_images, img_width, force_b64=False):
     html = ''.join([
-        _create_img_html(x, img_width, label=y)
+        _create_img_html(x, img_width, label=y, force_b64=force_b64)
         for x, y in zip(images[:max_images], labels[:max_images])
     ])
     return html
