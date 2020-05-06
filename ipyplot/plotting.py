@@ -187,10 +187,10 @@ def _create_tabs_html(images, labels, max_imgs_per_tab, img_width, force_b64=Fal
     for i, label in zip(tab_ids, unique_labels):
         html += '<div class="tab content%s">' % i  # NOQA E501
         active_tab = False
-        img_ids = list(range(0, len(images)))
+
         html += ''.join([
             _create_img_html(x, img_width, label=y, force_b64=force_b64)
-            for x, y in zip(images[labels == label][:max_imgs_per_tab], img_ids)
+            for y, x in enumerate(images[labels == label][:max_imgs_per_tab])
         ])        
         html += '</div>'
 
