@@ -14,7 +14,7 @@ except Exception as e:
     raise Exception('IPython not detected. Plotting without IPython is not possible')  # NOQA E501
 
 
-def plot_class_tabs(images, labels, max_imgs_per_tab=50, img_width=220):
+def plot_class_tabs(images, labels, max_imgs_per_tab=10, img_width=220):
     """
     Efficient and convenient way of displaying images in interactive tabs
     grouped by labels/clusters.
@@ -44,7 +44,7 @@ def plot_class_tabs(images, labels, max_imgs_per_tab=50, img_width=220):
     _display(html)
 
 
-def plot_images(images, labels=None, max_images=100, img_width=300):
+def plot_images(images, labels=None, max_images=30, img_width=300):
     """
     Displays images based on the provided paths
 
