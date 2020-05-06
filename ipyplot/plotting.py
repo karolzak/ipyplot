@@ -8,6 +8,11 @@ from PIL import Image
 
 from .img_helpers import resize_with_aspect_ratio
 
+try:
+    from IPython.display import display, HTML
+except Exception as e:
+    raise Exception('IPython not detected. Plotting without IPython is not possible')  # NOQA E501
+
 
 def plot_class_tabs(
         images,
@@ -135,24 +140,52 @@ def plot_class_representations(
         img_width=img_width,
         force_b64=force_b64)
 
-
 def _create_tabs_html(images, labels, max_imgs_per_tab, img_width, force_b64=False):
-    html = '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>'  # NOQA E501
-    html = '<div><ul class="nav nav-pills">'
+    # html = '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>'  # NOQA E501
+    html = '<div>'
 
     unique_labels = np.unique(labels)
     tab_ids = [uuid.uuid4() for label in unique_labels]
+    style_html = """
+        <style>
+            input { display: none; }
+            input + label { display: inline-block }
+
+            input + label {
+            border: 1px solid #999;
+            background: #EEE;
+            padding: 4px 12px;
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            top: 1px;
+            }
+            input:checked + label {
+            background: #FFF;
+            border-bottom: 1px solid transparent;
+            }
+            input ~ .tab {
+            border-top: 1px solid #999;
+            padding: 12px;
+            }
+            
+            input ~ .tab { display: none }
+        """
+    
+    for i in tab_ids:
+        style_html += '#tab%s:checked ~ .tab.content%s,' % (i, i)
+    style_html = style_html[:-1] + '{ display: block; }</style>'
+
+    html += style_html
 
     active_tab = True
     for i, label in zip(tab_ids, unique_labels):
-        html += '<li class="active">' if active_tab else '<li>'
+        html += '<input type="radio" name="tabs" id="tab%s"%s/>' % (i, ' checked ' if active_tab else '')  # NOQA E501
+        html += '<label for="tab%s">%s</label>' % (i, label)
         active_tab = False
-        html += '<a href="#%s" data-toggle="tab">%s</a></li>' % (i, label)
-    html += '</ul><div class="tab-content clearfix">'
 
     active_tab = True
     for i, label in zip(tab_ids, unique_labels):
-        html += '<div class="tab-pane active" id="%s">' % i if active_tab else '<div class="tab-pane" id="%s">' % i  # NOQA E501
+        html += '<div class="tab content%s">' % i  # NOQA E501
         active_tab = False
         img_ids = list(range(0, len(images)))
         html += ''.join([
@@ -161,9 +194,38 @@ def _create_tabs_html(images, labels, max_imgs_per_tab, img_width, force_b64=Fal
         ])        
         html += '</div>'
 
-    html += '</div></div>'
+    html += '</div>'
 
     return html
+
+# def _create_tabs_html(images, labels, max_imgs_per_tab, img_width, force_b64=False):
+#     # html = '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>'  # NOQA E501
+#     html = '<div><ul class="nav nav-pills">'
+
+#     unique_labels = np.unique(labels)
+#     tab_ids = [uuid.uuid4() for label in unique_labels]
+
+#     active_tab = True
+#     for i, label in zip(tab_ids, unique_labels):
+#         html += '<li class="active">' if active_tab else '<li>'
+#         active_tab = False
+#         html += '<a href="#%s" data-toggle="tab">%s</a></li>' % (i, label)
+#     html += '</ul><div class="tab-content clearfix">'
+
+#     active_tab = True
+#     for i, label in zip(tab_ids, unique_labels):
+#         html += '<div class="tab-pane active" id="%s">' % i if active_tab else '<div class="tab-pane" id="%s">' % i  # NOQA E501
+#         active_tab = False
+#         img_ids = list(range(0, len(images)))
+#         html += ''.join([
+#             _create_img_html(x, img_width, label=y, force_b64=force_b64)
+#             for x, y in zip(images[labels == label][:max_imgs_per_tab], img_ids)
+#         ])        
+#         html += '</div>'
+
+#     html += '</div></div>'
+
+#     return html
 
 
 def _display(html):
