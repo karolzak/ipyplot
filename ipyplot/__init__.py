@@ -1,7 +1,11 @@
 import sys
 
 if 'google.colab' in sys.modules:
-    print("WARNING! You might encounter some issues while running in Google colab environment")  # NOQA E501
+    print("""
+    WARNING! Google Colab Environment detected!
+    You might encounter issues while running in Google Colab environment.
+    If images are not displaying properly please try setting `base_64` param to `True`.
+    """)
 
 from .plotting import (
     plot_class_representations, plot_class_tabs,
