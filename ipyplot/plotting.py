@@ -13,6 +13,11 @@ try:
 except Exception as e:
     raise Exception('IPython not detected. Plotting without IPython is not possible')  # NOQA E501
 
+try:
+    import google.colab
+except:
+    print("WARNING! Running in Google colab environment makes some of the functions impossible to run correctly")  # NOQA E501
+
 
 def plot_class_tabs(images, labels, max_imgs_per_tab=10, img_width=220):
     """
