@@ -118,7 +118,7 @@ def plot_class_representations(
 
 
 def _create_tabs_html(images, labels, max_imgs_per_tab, img_width):
-    #  html = '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>'  # NOQA E501
+    html = '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>'  # NOQA E501
     html = '<div><ul class="nav nav-pills">'
 
     unique_labels = np.unique(labels)
