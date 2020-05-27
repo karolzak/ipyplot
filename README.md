@@ -5,6 +5,25 @@ Especially in one of my recent projects I had to work with a vast number of docu
 My frustration grew up to a point were I couldn't stand it anymore and started to look for other options..  
 Best solution I found involved using `IPython.display` function in connection with simple HTML. Using that approach I built a simple python package called **IPyPlot** which finally helped me cure my frustration and saved a lot of my time
 
+### Features:
+- [x] Easy, fast and efficient plotting of images in python within notebooks
+- [x] Plotting functions (see [examples section](#Usage-examples) to learn more:
+  - [x] `plot_images` - simply plots all the images in a grid-like manner 
+  - [x] `plot_class_representations` - similar to `plot_images` but displays only a single image per class (based on provided labels collection)
+  - [x] `plot_class_tabs` - plots images in a grid-like manner in a separate tab for each class based on provided label
+- [x] Supported notebook platforms:
+  - [x] Jupyter
+  - [x] Google Colab
+  - [x] Azure Notebooks
+  - [x] Kaggle Notebooks
+- [x] Supported image formats:
+  - [x] Array of local storage URLs, e.g. `[your/dir/img1.jpg]`
+  - [x] Array of remote URLs, e.g. `[http://yourimages.com/img1.jpg]`
+  - [x] Array of `PIL.Image` objects
+  - [x] Array of images as `numpy.ndarray` objects
+- [x] Misc:
+  - [x] `force_b64` flag to force conversion of images from URLs to base64 format
+
 ## Getting Started
 
 Checkout the [examples below](#Usage-examples) and 
