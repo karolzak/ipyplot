@@ -1,8 +1,8 @@
 import sys
 
-name = "keras_unet"
+name = "ipyplot"
 
-__version__ = "1.0.0"
+__version__ = "1.0.5"
 
 if 'google.colab' in sys.modules:
     print("""
