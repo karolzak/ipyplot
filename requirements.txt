@@ -1,3 +1,4 @@
 IPython
 Numpy
 pillow
+bump2version
