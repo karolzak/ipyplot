@@ -1,5 +1,9 @@
 import sys
 
+name = "keras_unet"
+
+__version__ = "1.0.0"
+
 if 'google.colab' in sys.modules:
     print("""
     WARNING! Google Colab Environment detected!
