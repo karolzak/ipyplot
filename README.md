@@ -1,6 +1,7 @@
 [![Build](https://github.com/karolzak/ipyplot/workflows/Python%20package/badge.svg)](https://github.com/karolzak/ipyplot/actions?query=workflow%3A%22Python+package%22)
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/karolzak/ipyplot/blob/master/LICENSE)
+[![PyPI - version](https://img.shields.io/pypi/v/ipyplot.svg "PyPI version")](https://pypi.org/project/ipyplot/) 
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/ipyplot)](https://pypi.org/project/ipyplot/)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/karolzak/ipyplot/blob/master/LICENSE)
 
 **Share**:  
 [![Twitter URL](https://img.shields.io/twitter/url?url=https%3A%2F%2Fgithub.com%2karolzak%2Fipyplot)](http://twitter.com/share?text=IPyPlot%20-%20fast%20and%20effortless%20way%20to%20display%20huge%20numbers%20of%20images%20in%20Python%20notebooks&url=https://github.com/karolzak/ipyplot/&hashtags=python,computervision,imageclassification,deeplearning,ML,AI)
