@@ -5,6 +5,7 @@
 
 **Share**:  
 [![Twitter URL](https://img.shields.io/twitter/url?url=https%3A%2F%2Fgithub.com%2karolzak%2Fipyplot)](http://twitter.com/share?text=IPyPlot%20-%20fast%20and%20effortless%20way%20to%20display%20huge%20numbers%20of%20images%20in%20Python%20notebooks&url=https://github.com/karolzak/ipyplot/&hashtags=python,computervision,imageclassification,deeplearning,ML,AI)
+[![LinkedIn URL](https://raw.githubusercontent.com/karolzak/boxdetect/master/images/linkedin_share4.png)](http://www.linkedin.com/shareArticle?mini=true&url=https://github.com/karolzak/ipyplot&title=IPyPlot%20python%20package)
 
 **IPyPlot** is a small python package offering fast and efficient plotting of images inside Jupyter Notebooks cells. It's using IPython with HTML for faster, richer and more interactive way of displaying big number of images.
 
