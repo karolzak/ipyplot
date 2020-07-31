@@ -16,4 +16,4 @@ from .plotting import (
     plot_images
 )
 
-import ipyplot.img_helpers
+# import ipyplot.img_helpers
