@@ -1,3 +1,13 @@
+[![Build](https://github.com/karolzak/ipyplot/workflows/CI%20Build/badge.svg)](https://github.com/karolzak/ipyplot/actions?query=workflow%3A%22CI+Build%22)
+[![PyPI - version](https://img.shields.io/pypi/v/ipyplot.svg "PyPI version")](https://pypi.org/project/ipyplot/) 
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ipyplot)](https://pypi.org/project/ipyplot/)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/ipyplot)](https://pypi.org/project/ipyplot/)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/karolzak/ipyplot/blob/master/LICENSE)
+
+**Share**:  
+[![Twitter URL](https://img.shields.io/twitter/url?url=https%3A%2F%2Fgithub.com%2karolzak%2Fipyplot)](http://twitter.com/share?text=IPyPlot%20-%20fast%20and%20effortless%20way%20to%20display%20huge%20numbers%20of%20images%20in%20Python%20notebooks&url=https://github.com/karolzak/ipyplot/&hashtags=python,computervision,imageclassification,deeplearning,ML,AI)
+[![LinkedIn URL](https://raw.githubusercontent.com/karolzak/boxdetect/master/images/linkedin_share4.png)](http://www.linkedin.com/shareArticle?mini=true&url=https://github.com/karolzak/ipyplot&title=IPyPlot%20python%20package)
+
 **IPyPlot** is a small python package offering fast and efficient plotting of images inside Jupyter Notebooks cells. It's using IPython with HTML for faster, richer and more interactive way of displaying big number of images.
 
 Displaying huge numbers of images with Python in Notebooks always was a big pain for me as I always used `matplotlib` for that task and never have I even considered if it can be done faster, easier or more efficiently.  
