@@ -1,3 +1,11 @@
+import base64
+import io
+
+import numpy as np
+from numpy import str_
+from PIL import Image
+
+
 def resize_with_aspect_ratio(img, max_size=1000):
     """Helper function to resize image against the longer edge
 
@@ -6,7 +14,7 @@ def resize_with_aspect_ratio(img, max_size=1000):
             Image object to be resized
         max_size (int, optional):
             Max size of the longer edge in pixels.
-            Defaults to 2800.
+            Defaults to 1000.
 
     Returns:
         PIL.Image:
@@ -18,3 +26,15 @@ def resize_with_aspect_ratio(img, max_size=1000):
         (int(w * aspect_ratio), int(h * aspect_ratio))
     )
     return resized_img
+
+
+def img_to_base64(image, max_size):
+    if type(image) is np.ndarray:
+        image = Image.fromarray(image)
+    elif type(image) is str or type(image) is str_:
+        image = Image.open(image)
+    output = io.BytesIO()
+    image = resize_with_aspect_ratio(image, max_size)
+    image.save(output, format='PNG')
+    b64 = str(base64.b64encode(output.getvalue()).decode('utf-8'))
+    return b64
