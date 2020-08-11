@@ -1,6 +1,7 @@
 [![Build](https://github.com/karolzak/ipyplot/workflows/Python%20package/badge.svg)](https://github.com/karolzak/ipyplot/actions?query=workflow%3A%22Python+package%22)
 [![PyPI - version](https://img.shields.io/pypi/v/ipyplot.svg "PyPI version")](https://pypi.org/project/ipyplot/) 
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/ipyplot)](https://pypi.org/project/ipyplot/)
+[![Downloads](https://pepy.tech/badge/ipyplot)](https://pepy.tech/project/ipyplot)
+[![Downloads/Month](https://pepy.tech/badge/ipyplot/month)](https://pepy.tech/project/ipyplot/month)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/karolzak/ipyplot/blob/master/LICENSE)
 
 **Share**:  
