@@ -20,10 +20,8 @@ def create_tabs(
     tab_ids = [uuid.uuid4() for label in unique_labels]
     style_html = """
         <style>
-            input { display: none; }
-            input + label { display: inline-block }
-
-            input + label {
+            input.ipyplot-tab { display: none; }
+            input.ipyplot-tab + label.ipyplot-tab-label {
             border: 1px solid #999;
             background: #EEE;
             padding: 4px 12px;
@@ -31,16 +29,16 @@ def create_tabs(
             position: relative;
             top: 1px;
             }
-            input:checked + label {
+            input.ipyplot-tab:checked + label.ipyplot-tab-label {
             background: #FFF;
             border-bottom: 1px solid transparent;
             }
-            input ~ .tab {
+            input.ipyplot-tab ~ .tab {
             border-top: 1px solid #999;
             padding: 12px;
             }
 
-            input ~ .tab { display: none }
+            input.ipyplot-tab ~ .tab { display: none }
         """
 
     for i in tab_ids:
@@ -51,8 +49,8 @@ def create_tabs(
 
     active_tab = True
     for i, label in zip(tab_ids, unique_labels):
-        html += '<input type="radio" name="tabs" id="tab%s"%s/>' % (i, ' checked ' if active_tab else '')  # NOQA E501
-        html += '<label for="tab%s">%s</label>' % (i, label)
+        html += '<input class="ipyplot-tab" type="radio" name="tabs" id="tab%s"%s/>' % (i, ' checked ' if active_tab else '')  # NOQA E501
+        html += '<label class="ipyplot-tab-label" for="tab%s">%s</label>' % (i, label)  # NOQA E501
         active_tab = False
 
     active_tab = True
