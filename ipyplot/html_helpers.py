@@ -82,7 +82,7 @@ def display_html(html):
     return display(HTML(html))
 
 
-def create_img(image, width, label, force_b64=False):
+def create_img(image, width, label, grid_style_uuid, force_b64=False):
     img_uuid = shortuuid.uuid()
 
     img_html = ""
@@ -100,7 +100,7 @@ def create_img(image, width, label, force_b64=False):
         img_html += '<img src="data:image/png;base64,%s"/>' % img_to_base64(image, width)  # NOQA E501
 
     html = """
-    <div class="holder">
+    <div class="ipyplot-holder-%s">
         <div id="ipyplot-image-%s" class="ipyplot-imgbox">
             <a class="ipyplot-close" href="#"/>
             <a class="ipyplot-expand" href="#ipyplot-image-%s"/>
@@ -108,17 +108,19 @@ def create_img(image, width, label, force_b64=False):
             %s
         </div>
     </div>
-    """ % (img_uuid, img_uuid, label, img_html)
+    """ % (grid_style_uuid, img_uuid, img_uuid, label, img_html)
 
     return html
 
 
 def create_imgs_grid(
         images, labels, max_images, img_width, force_b64=False):
-    html = get_default_style(img_width)
+    html, grid_style_uuid = get_default_style(img_width)
     html += '<div id="ipyplot-img-container">'
     html += ''.join([
-        create_img(x, width=img_width, label=y, force_b64=force_b64)
+        create_img(
+            x, width=img_width, label=y,
+            grid_style_uuid=grid_style_uuid, force_b64=force_b64)
         for x, y in zip(images[:max_images], labels[:max_images])
     ])
     html += '</div>'
@@ -137,7 +139,7 @@ def get_default_style(img_width):
             position: relative;
         }
 
-        .holder {
+        .ipyplot-holder-%s {
             /* The width and height, you can change these */
             width: %spx;
             display: inline-block;
@@ -200,5 +202,5 @@ def get_default_style(img_width):
             display: none;
         }
         </style>
-    """ % (img_width)
-    return html
+    """ % (style_uuid, img_width)
+    return html, style_uuid
