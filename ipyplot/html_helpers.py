@@ -83,28 +83,6 @@ def display_html(html):
 
 
 def create_img(image, width, label, force_b64=False):
-    html = (
-        '<div class="zoom" style="display: inline-block; width: %spx; vertical-align: top; text-align: center;">' % (width + 20) +  # NOQA E501
-        '<h4 style="font-size: 12px">%s</h4>' % label  # NOQA E501
-    )
-    use_b64 = True
-    if type(image) is str or type(image) is str_:
-        html += '<h4 style="font-size: 9px; padding-left: 10px; padding-right: 10px; width: 90%%; word-wrap: break-word; white-space: normal;">%s</h4>' % (image)  # NOQA E501
-        if not force_b64:
-            use_b64 = False
-            html += '<img src="%s" style="margin: 1px; width: %spx; border: 2px solid #ddd;"/>' % (image, width)  # NOQA E501
-        elif "http" in image:
-            print("WARNING: Current implementation doesn't allow to use 'force_b64=True' with images as internet URIs. Ignoring 'force_b64' flag")  # NOQA E501
-            use_b64 = False
-
-    if use_b64:
-        html += '<img src="data:image/png;base64,%s" style="margin: 1px; width: %spx; border: 2px solid #ddd;"/>' % (
-            img_to_base64(image, width*2), width)  # NOQA E501
-
-    return html + '</div>'
-
-
-def create_img1(image, width, label, force_b64=False):
     img_uuid = shortuuid.uuid()
 
     img_html = ""
@@ -140,7 +118,7 @@ def create_imgs_grid(
     html = get_default_style(img_width)
     html += '<div id="ipyplot-img-container">'
     html += ''.join([
-        create_img1(x, width=img_width, label=y, force_b64=force_b64)
+        create_img(x, width=img_width, label=y, force_b64=force_b64)
         for x, y in zip(images[:max_images], labels[:max_images])
     ])
     html += '</div>'
