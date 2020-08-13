@@ -1,8 +1,8 @@
-
+import os
 
 import numpy as np
-from numpy import str_
 import shortuuid
+from numpy import str_
 
 from .img_helpers import img_to_base64
 
@@ -108,7 +108,6 @@ def create_img(image, width, label, grid_style_uuid, force_b64=False):
         </div>
     </div>
     """ % {'0': grid_style_uuid, '1': img_uuid, '2': label, '3': img_html}
-
     return html
 
 
@@ -161,7 +160,7 @@ def get_default_style(img_width):
 
         .ipyplot-imgbox-%(0)s img {
             /* Inherit the width and height from the parent element */
-            width: inherited;
+            width: 100%%;
         }
 
         .ipyplot-imgbox-%(0)s a {
