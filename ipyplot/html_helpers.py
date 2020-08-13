@@ -21,10 +21,10 @@ def create_tabs(
     tab_ids = [shortuuid.uuid() for label in unique_labels]
     style_html = """
         <style>
-            input.ipyplot-tab {
+            input.ipyplot-tab-%(0)s {
                 display: none;
             }
-            input.ipyplot-tab + label.ipyplot-tab-label {
+            input.ipyplot-tab-%(0)s + label.ipyplot-tab-label-%(0)s {
                 border: 1px solid #999;
                 background: #EEE;
                 padding: 4px 12px;
@@ -32,19 +32,19 @@ def create_tabs(
                 position: relative;
                 top: 1px;
             }
-            input.ipyplot-tab:checked + label.ipyplot-tab-label {
+            input.ipyplot-tab-%(0)s:checked + label.ipyplot-tab-label-%(0)s {
                 background: #FFF;
                 border-bottom: 1px solid transparent;
             }
-            input.ipyplot-tab ~ .tab {
+            input.ipyplot-tab-%(0)s ~ .tab {
                 border-top: 1px solid #999;
                 padding: 12px;
             }
 
-            input.ipyplot-tab ~ .tab {
+            input.ipyplot-tab-%(0)s ~ .tab {
                 display: none
             }
-    """
+    """ % {'0': tab_id}
 
     for i in tab_ids:
         style_html += '#tab%s:checked ~ .tab.content%s,' % (i, i)
@@ -54,8 +54,8 @@ def create_tabs(
 
     active_tab = True
     for i, label in zip(tab_ids, unique_labels):
-        html += '<input class="ipyplot-tab" type="radio" name="tabs" id="tab%s"%s/>' % (i, ' checked ' if active_tab else '')  # NOQA E501
-        html += '<label class="ipyplot-tab-label" for="tab%s">%s</label>' % (i, label)  # NOQA E501
+        html += '<input class="ipyplot-tab-%s" type="radio" name="tabs" id="tab%s"%s/>' % (tab_id, i, ' checked ' if active_tab else '')  # NOQA E501
+        html += '<label class="ipyplot-tab-label-%s" for="tab%s">%s</label>' % (tab_id, i, label)  # NOQA E501
         active_tab = False
 
     active_tab = True
@@ -100,15 +100,15 @@ def create_img(image, width, label, grid_style_uuid, force_b64=False):
         img_html += '<img src="data:image/png;base64,%s"/>' % img_to_base64(image, width)  # NOQA E501
 
     html = """
-    <div class="ipyplot-holder-%s">
-        <div id="ipyplot-image-%s" class="ipyplot-imgbox">
+    <div class="ipyplot-holder-%(0)s">
+        <div id="ipyplot-image-%(0)s-%(1)s" class="ipyplot-imgbox-%(0)s">
             <a class="ipyplot-close" href="#"/>
-            <a class="ipyplot-expand" href="#ipyplot-image-%s"/>
-            <h4 style="font-size: 12px">%s</h4>
-            %s
+            <a class="ipyplot-expand" href="#ipyplot-image-%(0)s-%(1)s"/>
+            <h4 style="font-size: 12px">%(2)s</h4>
+            %(3)s
         </div>
     </div>
-    """ % (grid_style_uuid, img_uuid, img_uuid, label, img_html)
+    """ % {'0': grid_style_uuid, '1': img_uuid, '2': label, '3': img_html}
 
     return html
 
@@ -116,7 +116,7 @@ def create_img(image, width, label, grid_style_uuid, force_b64=False):
 def create_imgs_grid(
         images, labels, max_images, img_width, force_b64=False):
     html, grid_style_uuid = get_default_style(img_width)
-    html += '<div id="ipyplot-img-container">'
+    html += '<div id="ipyplot-img-container-%s">' % grid_style_uuid
     html += ''.join([
         create_img(
             x, width=img_width, label=y,
@@ -131,7 +131,7 @@ def get_default_style(img_width):
     style_uuid = shortuuid.uuid()
     html = """
         <style>
-        #ipyplot-img-container {
+        #ipyplot-img-container-%(0)s {
             width: 100%%;
             height: 100%%;
             margin: 0%%;
@@ -139,15 +139,15 @@ def get_default_style(img_width):
             position: relative;
         }
 
-        .ipyplot-holder-%s {
+        .ipyplot-holder-%(0)s {
             /* The width and height, you can change these */
-            width: %spx;
+            width: %(1)spx;
             display: inline-block;
             margin: 5px;
             position: relative;
         }
 
-        .ipyplot-imgbox {
+        .ipyplot-imgbox-%(0)s {
             /* Inherit width and height from the .holder */
             background: white;
             display: inline-block;
@@ -160,12 +160,12 @@ def get_default_style(img_width):
             left: 0;
         }
 
-        .ipyplot-imgbox img {
+        .ipyplot-imgbox-%(0)s img {
             /* Inherit the width and height from the parent element */
             width: inherited;
         }
 
-        .ipyplot-imgbox a {
+        .ipyplot-imgbox-%(0)s a {
             width: 100%%;
             height: 100%%;
             position: absolute;
@@ -173,18 +173,18 @@ def get_default_style(img_width):
             left: 0;
         }
 
-        .ipyplot-imgbox .ipyplot-close {
+        .ipyplot-imgbox-%(0)s .ipyplot-close {
             display: none;
         }
 
-        .ipyplot-imgbox .ipyplot-close:hover {
+        .ipyplot-imgbox-%(0)s .ipyplot-close:hover {
             cursor: zoom-out;
         }
-        .ipyplot-imgbox .ipyplot-expand:hover {
+        .ipyplot-imgbox-%(0)s .ipyplot-expand:hover {
             cursor: zoom-in;
         }
 
-        div[id^=ipyplot-image]:target {
+        div[id^=ipyplot-image-%(0)s]:target {
             width: 100%%;
             transform: scale(2.5);
             transform-origin: left top;
@@ -194,13 +194,13 @@ def get_default_style(img_width):
             position: absolute;
         }
 
-        div[id^=ipyplot-image]:target .ipyplot-close {
+        div[id^=ipyplot-image-%(0)s]:target .ipyplot-close {
             display: block;
         }
 
-        div[id^=ipyplot-image]:target .ipyplot-expand {
+        div[id^=ipyplot-image-%(0)s]:target .ipyplot-expand {
             display: none;
         }
         </style>
-    """ % (style_uuid, img_width)
+    """ % {'0': style_uuid, '1': img_width}
     return html, style_uuid
