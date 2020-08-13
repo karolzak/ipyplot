@@ -32,6 +32,7 @@ setup(
     install_requires=[
         "IPython",
         "numpy",
-        "pillow"
+        "pillow",
+        "shortuuid"
     ],
 )
