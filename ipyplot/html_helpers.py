@@ -14,7 +14,6 @@ except Exception:
 
 def create_tabs(
         images, labels, max_imgs_per_tab, img_width, force_b64=False):
-    # html = '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>'  # NOQA E501
     html = '<div>'
     tab_id = shortuuid.uuid()
     unique_labels = np.unique(labels)
