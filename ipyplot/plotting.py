@@ -1,7 +1,7 @@
 import numpy as np
 
 from .html_helpers import (
-    display_html, create_img, create_tabs, create_imgs_list)
+    display_html, create_img, create_tabs, create_imgs_grid)
 
 
 def plot_class_tabs(
@@ -78,7 +78,7 @@ def plot_images(
 
     if labels is None:
         labels = list(range(0, len(images)))
-    html = create_imgs_list(
+    html = create_imgs_grid(
         images, labels, max_images, img_width, force_b64=force_b64)
 
     display_html(html)
