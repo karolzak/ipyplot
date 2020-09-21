@@ -4,3 +4,4 @@ pillow
 bump2version
 pytest
 pytest-cov
+shortuuid
