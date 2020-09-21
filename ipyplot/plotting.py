@@ -10,7 +10,8 @@ def plot_class_tabs(
         max_imgs_per_tab=15,
         img_width=150,
         zoom_scale=2.5,
-        force_b64=False):
+        force_b64=False,
+        tabs_order=None):
     """
     Efficient and convenient way of displaying images in interactive tabs
     grouped by labels/clusters.
@@ -46,7 +47,7 @@ def plot_class_tabs(
 
     html = create_tabs(
         images, labels, max_imgs_per_tab, img_width,
-        zoom_scale=zoom_scale, force_b64=force_b64)
+        zoom_scale=zoom_scale, force_b64=force_b64, tabs_order=tabs_order)
 
     display_html(html)
 
@@ -101,7 +102,8 @@ def plot_class_representations(
         ignore_list=['-1', 'unknown'],
         img_width=150,
         zoom_scale=2.5,
-        force_b64=False):
+        force_b64=False,
+        labels_order=None):
     """
     Function used to display first image from each cluster/class
 
@@ -130,19 +132,21 @@ def plot_class_representations(
     assert(type(ignore_list) is list or ignore_list is None)
     assert(type(img_width) is int)
 
-    uniques = np.unique(labels, return_index=True)
-    labels = uniques[0]
-    not_labeled_mask = np.isin(labels, ignore_list)
-    labels = labels[~not_labeled_mask]
-    idices = uniques[1][~not_labeled_mask]
-
-    group = []
-    for img_path in images[idices]:
-        group.append(img_path)
+    if labels_order:
+        group = images[
+            [np.where(labels == label)[0][0] for label in labels_order]]
+        sorted_labels = labels_order
+    else:
+        uniques = np.unique(labels, return_index=True)
+        sorted_labels = uniques[0]
+        not_labeled_mask = np.isin(sorted_labels, ignore_list)
+        sorted_labels = sorted_labels[~not_labeled_mask]
+        idices = uniques[1][~not_labeled_mask]
+        group = images[idices]
 
     plot_images(
         group,
-        labels=labels,
+        labels=sorted_labels,
         max_images=len(group),
         img_width=img_width,
         zoom_scale=zoom_scale,

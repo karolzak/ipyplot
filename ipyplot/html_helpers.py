@@ -12,11 +12,13 @@ except Exception:
 
 def create_tabs(
         images, labels, max_imgs_per_tab, img_width,
-        zoom_scale=2.5, force_b64=False):
+        zoom_scale=2.5, force_b64=False, tabs_order=None):
     html = '<div>'
     tab_id = shortuuid.uuid()
-    unique_labels = np.unique(labels)
-    tab_ids = [shortuuid.uuid() for label in unique_labels]
+    if tabs_order is None:
+        tabs_order = np.unique(labels)
+
+    tab_ids = [shortuuid.uuid() for label in tabs_order]
     style_html = """
         <style>
             input.ipyplot-tab-%(0)s {
@@ -51,13 +53,13 @@ def create_tabs(
     html += style_html
 
     active_tab = True
-    for i, label in zip(tab_ids, unique_labels):
+    for i, label in zip(tab_ids, tabs_order):
         html += '<input class="ipyplot-tab-%s" type="radio" name="tabs" id="tab%s"%s/>' % (tab_id, i, ' checked ' if active_tab else '')  # NOQA E501
         html += '<label class="ipyplot-tab-label-%s" for="tab%s">%s</label>' % (tab_id, i, label)  # NOQA E501
         active_tab = False
 
     active_tab = True
-    for i, label in zip(tab_ids, unique_labels):
+    for i, label in zip(tab_ids, tabs_order):
         html += '<div class="tab content%s">' % i  # NOQA E501
         active_tab = False
 
