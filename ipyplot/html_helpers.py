@@ -1,5 +1,3 @@
-import os
-
 import numpy as np
 import shortuuid
 from numpy import str_
@@ -13,7 +11,8 @@ except Exception:
 
 
 def create_tabs(
-        images, labels, max_imgs_per_tab, img_width, force_b64=False):
+        images, labels, max_imgs_per_tab, img_width,
+        zoom_scale=2.5, force_b64=False):
     html = '<div>'
     tab_id = shortuuid.uuid()
     unique_labels = np.unique(labels)
@@ -64,12 +63,13 @@ def create_tabs(
 
         html += create_imgs_grid(
             images[labels == label], list(range(0, max_imgs_per_tab)),
-            max_imgs_per_tab, img_width, force_b64=force_b64)
+            max_imgs_per_tab, img_width,
+            zoom_scale=zoom_scale, force_b64=force_b64)
 
         # html += ''.join([
         #     create_img(x, img_width, label=y, force_b64=force_b64)
         #     for y, x in enumerate(images[labels == label][:max_imgs_per_tab])
-        # ])        
+        # ])
         html += '</div>'
 
     html += '</div>'
@@ -112,8 +112,8 @@ def create_img(image, width, label, grid_style_uuid, force_b64=False):
 
 
 def create_imgs_grid(
-        images, labels, max_images, img_width, force_b64=False):
-    html, grid_style_uuid = get_default_style(img_width)
+        images, labels, max_images, img_width, zoom_scale, force_b64=False):
+    html, grid_style_uuid = get_default_style(img_width, zoom_scale)
     html += '<div id="ipyplot-img-container-%s">' % grid_style_uuid
     html += ''.join([
         create_img(
@@ -125,7 +125,7 @@ def create_imgs_grid(
     return html
 
 
-def get_default_style(img_width):
+def get_default_style(img_width, zoom_scale):
     style_uuid = shortuuid.uuid()
     html = """
         <style>
@@ -135,6 +135,7 @@ def get_default_style(img_width):
             margin: 0%%;
             overflow: auto;
             position: relative;
+            overflow-y:scroll;
         }
 
         .ipyplot-holder-%(0)s {
@@ -184,7 +185,7 @@ def get_default_style(img_width):
 
         div[id^=ipyplot-image-%(0)s]:target {
             width: 100%%;
-            transform: scale(2.5);
+            transform: scale(%(2)s);
             transform-origin: left top;
             z-index: 5000;
             top: 0;
@@ -200,5 +201,5 @@ def get_default_style(img_width):
             display: none;
         }
         </style>
-    """ % {'0': style_uuid, '1': img_width}
+    """ % {'0': style_uuid, '1': img_width, '2': zoom_scale}
     return html, style_uuid

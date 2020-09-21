@@ -7,8 +7,9 @@ from .html_helpers import (
 def plot_class_tabs(
         images,
         labels,
-        max_imgs_per_tab=10,
-        img_width=220,
+        max_imgs_per_tab=15,
+        img_width=150,
+        zoom_scale=2.5,
         force_b64=False):
     """
     Efficient and convenient way of displaying images in interactive tabs
@@ -22,11 +23,15 @@ def plot_class_tabs(
             Numpy array of corresponding classes
         max_imgs_per_tab (int, optional):
             How many samples from each cluster/class to display.
-            Defaults to 10.
+            Defaults to 15.
         img_width (int, optional):
             Image width.
             Adjust to change the number of images per row.
-            Defaults to 220.
+            Defaults to 150.
+        zoom_scale (float, optional):
+            Scale for zoom-in-on-click feature.
+            Best to keep between 1.0~5.0.
+            Defaults to 2.5.
         force_b64 (boolean, optional):
             You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  # NOQA E501
             Do mind that using b64 conversion vs reading directly from filepath will be slower.  # NOQA E501
@@ -40,7 +45,8 @@ def plot_class_tabs(
     assert(type(img_width) is int)
 
     html = create_tabs(
-        images, labels, max_imgs_per_tab, img_width, force_b64=force_b64)
+        images, labels, max_imgs_per_tab, img_width,
+        zoom_scale=zoom_scale, force_b64=force_b64)
 
     display_html(html)
 
@@ -49,7 +55,8 @@ def plot_images(
         images,
         labels=None,
         max_images=30,
-        img_width=300,
+        img_width=150,
+        zoom_scale=2.5,
         force_b64=False):
     """
     Displays images based on the provided paths
@@ -63,10 +70,14 @@ def plot_images(
             Defaults to None.
         max_images (int, optional):
             Max number of images to display.
-            Defaults to 100.
+            Defaults to 30.
         img_width (int, optional):
             Width of the displayed image.
-            Defaults to 300.
+            Defaults to 150.
+        zoom_scale (float, optional):
+            Scale for zoom-in-on-click feature.
+            Best to keep between 1.0~5.0.
+            Defaults to 2.5.
         force_b64 (boolean, optional):
             You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  # NOQA E501
             Do mind that using b64 conversion vs reading directly from filepath will be slower.  # NOQA E501
@@ -79,7 +90,8 @@ def plot_images(
     if labels is None:
         labels = list(range(0, len(images)))
     html = create_imgs_grid(
-        images, labels, max_images, img_width, force_b64=force_b64)
+        images, labels, max_images, img_width,
+        zoom_scale=zoom_scale, force_b64=force_b64)
 
     display_html(html)
 
@@ -88,6 +100,7 @@ def plot_class_representations(
         images, labels,
         ignore_list=['-1', 'unknown'],
         img_width=150,
+        zoom_scale=2.5,
         force_b64=False):
     """
     Function used to display first image from each cluster/class
@@ -103,6 +116,10 @@ def plot_class_representations(
         img_width (int, optional):
             Width of the displayed image.
             Defaults to 150.
+        zoom_scale (float, optional):
+            Scale for zoom-in-on-click feature.
+            Best to keep between 1.0~5.0.
+            Defaults to 2.5.
         force_b64 (boolean, optional):
             You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  # NOQA E501
             Do mind that using b64 conversion vs reading directly from filepath will be slower.  # NOQA E501
@@ -128,4 +145,5 @@ def plot_class_representations(
         labels=labels,
         max_images=len(group),
         img_width=img_width,
+        zoom_scale=zoom_scale,
         force_b64=force_b64)
