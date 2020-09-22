@@ -2,6 +2,7 @@ import numpy as np
 
 from .html_helpers import (
     display_html, create_img, create_tabs, create_imgs_grid)
+from .utils import get_class_representations
 
 
 def plot_class_tabs(
@@ -90,6 +91,7 @@ def plot_images(
 
     if labels is None:
         labels = list(range(0, len(images)))
+
     html = create_imgs_grid(
         images, labels, max_images, img_width,
         zoom_scale=zoom_scale, force_b64=force_b64)
@@ -132,22 +134,13 @@ def plot_class_representations(
     assert(type(ignore_list) is list or ignore_list is None)
     assert(type(img_width) is int)
 
-    if labels_order:
-        group = images[
-            [np.where(labels == label)[0][0] for label in labels_order]]
-        sorted_labels = labels_order
-    else:
-        uniques = np.unique(labels, return_index=True)
-        sorted_labels = uniques[0]
-        not_labeled_mask = np.isin(sorted_labels, ignore_list)
-        sorted_labels = sorted_labels[~not_labeled_mask]
-        idices = uniques[1][~not_labeled_mask]
-        group = images[idices]
+    images, labels = get_class_representations(
+        images, labels, ignore_list, labels_order)
 
     plot_images(
-        group,
-        labels=sorted_labels,
-        max_images=len(group),
+        images,
+        labels=labels,
+        max_images=len(images),
         img_width=img_width,
         zoom_scale=zoom_scale,
         force_b64=force_b64)
