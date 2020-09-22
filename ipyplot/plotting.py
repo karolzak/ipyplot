@@ -1,18 +1,19 @@
 import numpy as np
+from typing import Sequence
 
 from .html_helpers import (
-    display_html, create_img, create_tabs, create_imgs_grid)
+    display_html, create_tabs, create_imgs_grid)
 from .utils import get_class_representations
 
 
 def plot_class_tabs(
-        images,
-        labels,
-        max_imgs_per_tab=15,
-        img_width=150,
-        zoom_scale=2.5,
-        force_b64=False,
-        tabs_order=None):
+        images: Sequence[object],
+        labels: Sequence[str or int],
+        max_imgs_per_tab: int = 15,
+        img_width: int = 150,
+        zoom_scale: float = 2.5,
+        force_b64: bool = False,
+        tabs_order: Sequence[str or int] = None):
     """
     Efficient and convenient way of displaying images in interactive tabs
     grouped by labels/clusters.
@@ -41,10 +42,11 @@ def plot_class_tabs(
             Defaults to False.
     """
     assert(len(images) == len(labels))
-    assert(type(images) is np.ndarray)
-    assert(type(labels) is np.ndarray)
-    assert(type(max_imgs_per_tab) is int)
-    assert(type(img_width) is int)
+
+    images = np.asarray(images)
+    labels = np.asarray(labels)
+    # ignore_list = np.asarray(ignore_list) if ignore_list is not None else ignore_list  # NOQA E501
+    tabs_order = np.asarray(tabs_order) if tabs_order is not None else tabs_order  # NOQA E501
 
     html = create_tabs(
         images, labels, max_imgs_per_tab, img_width,
@@ -54,12 +56,12 @@ def plot_class_tabs(
 
 
 def plot_images(
-        images,
-        labels=None,
+        images: Sequence[object],
+        labels: Sequence[str or int] = None,
         max_images=30,
-        img_width=150,
-        zoom_scale=2.5,
-        force_b64=False):
+        img_width: int = 150,
+        zoom_scale: float = 2.5,
+        force_b64: bool = False):
     """
     Displays images based on the provided paths
 
@@ -86,8 +88,8 @@ def plot_images(
             You might need to set this to `True` in environments like Google colab.
             Defaults to False.
     """
-    assert(type(max_images) is int)
-    assert(type(img_width) is int)
+    images = np.asarray(images)
+    labels = np.asarray(labels) if labels is not None else labels
 
     if labels is None:
         labels = list(range(0, len(images)))
@@ -100,12 +102,13 @@ def plot_images(
 
 
 def plot_class_representations(
-        images, labels,
-        ignore_list=['-1', 'unknown'],
-        img_width=150,
-        zoom_scale=2.5,
-        force_b64=False,
-        labels_order=None):
+        images: Sequence[object],
+        labels: Sequence[str or int],
+        ignore_list: Sequence[str or int] = ['-1', 'unknown'],
+        img_width: int = 150,
+        zoom_scale: float = 2.5,
+        force_b64: bool = False,
+        labels_order: Sequence[str or int] = None):
     """
     Function used to display first image from each cluster/class
 
@@ -131,8 +134,11 @@ def plot_class_representations(
             Defaults to False.
     """
     assert(len(images) == len(labels))
-    assert(type(ignore_list) is list or ignore_list is None)
-    assert(type(img_width) is int)
+
+    images = np.asarray(images)
+    labels = np.asarray(labels)
+    ignore_list = np.asarray(ignore_list) if ignore_list is not None else ignore_list  # NOQA E501
+    labels_order = np.asarray(labels_order) if labels_order is not None else labels_order  # NOQA E501
 
     images, labels = get_class_representations(
         images, labels, ignore_list, labels_order)
