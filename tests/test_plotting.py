@@ -1,6 +1,7 @@
 import sys
 
 import numpy as np
+import pandas as pd
 import pytest
 from IPython.display import HTML
 
@@ -8,31 +9,38 @@ sys.path.append(".")
 sys.path.append("../.")
 import ipyplot
 
-BASE_NP_IMGS = np.random.rand(3, 128, 128, 3)
+BASE_NP_IMGS = list(np.asarray(np.random.rand(3, 128, 128, 3), dtype=np.uint8))
 
-BASE_INTERNET_URIS = np.asarray([
-    "https://raw.githubusercontent.com/karolzak/boxdetect/master/images/checkbox-example.jpg",
-    "https://raw.githubusercontent.com/karolzak/boxdetect/master/images/checkboxes-details.jpg",
-    "https://raw.githubusercontent.com/karolzak/boxdetect/master/images/example1.png",
-])
+BASE_INTERNET_URIS = [
+    "https://raw.githubusercontent.com/karolzak/boxdetect/master/images/checkbox-example.jpg",  # NOQA E501
+    "https://raw.githubusercontent.com/karolzak/boxdetect/master/images/checkboxes-details.jpg",  # NOQA E501
+    "https://raw.githubusercontent.com/karolzak/boxdetect/master/images/example1.png",  # NOQA E501
+]
 
-BASE_LOCAL_URIS = np.asarray([
+BASE_LOCAL_URIS = [
     "docs/example1-tabs.jpg",
     "docs/example2-images.jpg",
     "docs/example3-classes.jpg",
-])
+]
 
 TEST_DATA = [
-    # (np.random.rand(3, 128, 128, 3).astype(np.float32), False),
-    # (np.random.rand(3, 128, 128, 3).astype(np.float32) * 255, False),
-    (BASE_NP_IMGS.astype(np.uint8), True),
-    (BASE_NP_IMGS.astype(np.uint8) * 255, True),
-    (BASE_NP_IMGS.astype(np.uint8), False),
-    (BASE_NP_IMGS.astype(np.uint8) * 255, False),
-    (BASE_INTERNET_URIS, False),
-    (BASE_INTERNET_URIS, True),
-    (BASE_LOCAL_URIS, True),
-    (BASE_LOCAL_URIS, False),
+    # (imgs, b64)
+    # (BASE_NP_IMGS.astype(np.uint8), True),
+    # (BASE_NP_IMGS.astype(np.uint8) * 255, True),
+    # (BASE_NP_IMGS.astype(np.uint8), False),
+    # (BASE_NP_IMGS.astype(np.uint8) * 255, False),
+    (BASE_NP_IMGS, True),
+    (pd.Series(BASE_NP_IMGS), True),
+    (np.asarray(BASE_NP_IMGS), True),
+    (np.asarray(BASE_NP_IMGS) * 255, True),
+    (np.asarray(BASE_NP_IMGS), False),
+    (np.asarray(BASE_NP_IMGS) * 255, False),
+    # (BASE_NP_IMGS.astype(np.float), False),
+    # (BASE_NP_IMGS.astype(np.float) * 255, False),
+    (np.asarray(BASE_INTERNET_URIS), False),
+    (np.asarray(BASE_INTERNET_URIS), True),
+    (np.asarray(BASE_LOCAL_URIS), True),
+    (np.asarray(BASE_LOCAL_URIS), False),
 ]
 
 
