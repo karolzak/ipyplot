@@ -30,7 +30,10 @@ def resize_with_aspect_ratio(img, max_size=1000):
 
 def img_to_base64(image, max_size):
     if type(image) is np.ndarray:
-        image = Image.fromarray(image)
+        if image.dtype in [np.float, np.float32, np.float64]:
+            image = Image.fromarray(image.astype(np.uint8) * 255)
+        else:
+            image = Image.fromarray(image)
     elif type(image) is str or type(image) is str_:
         image = Image.open(image)
     output = io.BytesIO()

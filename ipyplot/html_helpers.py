@@ -97,6 +97,8 @@ def create_img(image, width, label, grid_style_uuid, force_b64=False):
             print("WARNING: Current implementation doesn't allow to use 'force_b64=True' with images as internet URIs. Ignoring 'force_b64' flag")  # NOQA E501
             use_b64 = False
 
+    # if image is not a string it means its either PIL.Image or np.ndarray
+    # that's why it's necessary to use conversion to b64
     if use_b64:
         img_html += '<img src="data:image/png;base64,%s"/>' % img_to_base64(image, width)  # NOQA E501
 
