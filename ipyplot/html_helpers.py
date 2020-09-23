@@ -6,7 +6,7 @@ from .img_helpers import img_to_base64
 
 try:
     from IPython.display import display, HTML
-except Exception:
+except Exception:  # pragma: no cover
     raise Exception('IPython not detected. Plotting without IPython is not possible')  # NOQA E501
 
 
