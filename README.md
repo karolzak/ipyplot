@@ -1,4 +1,4 @@
-[![Build](https://github.com/karolzak/ipyplot/workflows/Python%20package/badge.svg)](https://github.com/karolzak/ipyplot/actions?query=workflow%3A%22Python+package%22)
+[![Build](https://github.com/karolzak/ipyplot/workflows/CI%20Build/badge.svg)](https://github.com/karolzak/ipyplot/actions?query=workflow%3A%22CI+Build%22)
 [![PyPI - version](https://img.shields.io/pypi/v/ipyplot.svg "PyPI version")](https://pypi.org/project/ipyplot/) 
 [![Downloads](https://pepy.tech/badge/ipyplot)](https://pepy.tech/project/ipyplot)
 [![Downloads/Month](https://pepy.tech/badge/ipyplot/month)](https://pepy.tech/project/ipyplot/month)
