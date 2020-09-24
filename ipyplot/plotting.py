@@ -1,6 +1,5 @@
 import numpy as np
 from typing import Sequence
-from PIL import Image
 
 from .html_helpers import (
     display_html, create_tabs, create_imgs_grid)
@@ -10,6 +9,7 @@ from .utils import get_class_representations, seq2arr
 def plot_class_tabs(
         images: Sequence[object],
         labels: Sequence[str or int],
+        custom_texts: Sequence[str or int or float] = None,
         max_imgs_per_tab: int = 15,
         img_width: int = 150,
         zoom_scale: float = 2.5,
@@ -48,10 +48,17 @@ def plot_class_tabs(
     labels = np.asarray(labels)
     # ignore_list = np.asarray(ignore_list) if ignore_list is not None else ignore_list  # NOQA E501
     tabs_order = np.asarray(tabs_order) if tabs_order is not None else tabs_order  # NOQA E501
+    custom_texts = np.asarray(custom_texts) if custom_texts is not None else custom_texts  # NOQA E501
 
     html = create_tabs(
-        images, labels, max_imgs_per_tab, img_width,
-        zoom_scale=zoom_scale, force_b64=force_b64, tabs_order=tabs_order)
+        images=images,
+        labels=labels,
+        custom_texts=custom_texts,
+        max_imgs_per_tab=max_imgs_per_tab,
+        img_width=img_width,
+        zoom_scale=zoom_scale,
+        force_b64=force_b64,
+        tabs_order=tabs_order)
 
     display_html(html)
 
@@ -59,6 +66,7 @@ def plot_class_tabs(
 def plot_images(
         images: Sequence[object],
         labels: Sequence[str or int] = None,
+        custom_texts: Sequence[str or int or float] = None,
         max_images: int = 30,
         img_width: int = 150,
         zoom_scale: float = 2.5,
@@ -96,9 +104,16 @@ def plot_images(
     else:
         labels = np.asarray(labels)
 
+    custom_texts = np.asarray(custom_texts) if custom_texts is not None else custom_texts  # NOQA E501
+
     html = create_imgs_grid(
-        images, labels, max_images, img_width,
-        zoom_scale=zoom_scale, force_b64=force_b64)
+        images=images,
+        labels=labels,
+        custom_texts=custom_texts,
+        max_images=max_images,
+        img_width=img_width,
+        zoom_scale=zoom_scale,
+        force_b64=force_b64)
 
     display_html(html)
 
@@ -147,7 +162,7 @@ def plot_class_representations(
         images, labels, ignore_list, labels_order)
 
     plot_images(
-        images,
+        images=images,
         labels=labels,
         max_images=len(images),
         img_width=img_width,

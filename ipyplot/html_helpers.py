@@ -11,13 +11,23 @@ except Exception:  # pragma: no cover
 
 
 def create_tabs(
-        images, labels, max_imgs_per_tab, img_width,
-        zoom_scale=2.5, force_b64=False, tabs_order=None):
-    html = '<div>'
+        images,
+        labels,
+        custom_texts=None,
+        max_imgs_per_tab=30,
+        img_width=150,
+        zoom_scale=2.5,
+        force_b64=False,
+        tabs_order=None):
     tab_id = shortuuid.uuid()
+
     if tabs_order is None:
         tabs_order = np.unique(labels)
 
+    if custom_texts is None:
+        custom_texts = np.asarray([None for _ in range(len(images))])
+
+    html = '<div>'
     tab_ids = [shortuuid.uuid() for label in tabs_order]
     style_html = """
         <style>
@@ -63,15 +73,16 @@ def create_tabs(
         html += '<div class="tab content%s">' % i  # NOQA E501
         active_tab = False
 
+        tab_imgs_mask = labels == label
         html += create_imgs_grid(
-            images[labels == label], list(range(0, max_imgs_per_tab)),
-            max_imgs_per_tab, img_width,
-            zoom_scale=zoom_scale, force_b64=force_b64)
+            images=images[tab_imgs_mask],
+            labels=list(range(0, max_imgs_per_tab)),
+            max_images=max_imgs_per_tab,
+            img_width=img_width,
+            zoom_scale=zoom_scale,
+            custom_texts=custom_texts[tab_imgs_mask],
+            force_b64=force_b64)
 
-        # html += ''.join([
-        #     create_img(x, img_width, label=y, force_b64=force_b64)
-        #     for y, x in enumerate(images[labels == label][:max_imgs_per_tab])
-        # ])
         html += '</div>'
 
     html += '</div>'
@@ -83,18 +94,28 @@ def display_html(html):
     return display(HTML(html))
 
 
-def create_img(image, width, label, grid_style_uuid, force_b64=False):
+def create_img(
+        image,
+        label,
+        width,
+        grid_style_uuid,
+        custom_text=None,
+        force_b64=False):
     img_uuid = shortuuid.uuid()
 
     img_html = ""
+    if custom_text is not None:
+        img_html += '<h4 style="font-size: 12px">%s</h4>' % custom_text
+
     use_b64 = True
+    # if image is a string (URL) display its URL
     if type(image) is str or type(image) is str_:
         img_html += '<h4 style="font-size: 9px; padding-left: 10px; padding-right: 10px; width: 95%%; word-wrap: break-word; white-space: normal;">%s</h4>' % (image)  # NOQA E501
         if not force_b64:
             use_b64 = False
             img_html += '<img src="%s"/>' % image
         elif "http" in image:
-            print("WARNING: Current implementation doesn't allow to use 'force_b64=True' with images as internet URIs. Ignoring 'force_b64' flag")  # NOQA E501
+            print("WARNING: Current implementation doesn't allow to use 'force_b64=True' with images as remote URLs. Ignoring 'force_b64' flag")  # NOQA E501
             use_b64 = False
 
     # if image is not a string it means its either PIL.Image or np.ndarray
@@ -116,14 +137,25 @@ def create_img(image, width, label, grid_style_uuid, force_b64=False):
 
 
 def create_imgs_grid(
-        images, labels, max_images, img_width, zoom_scale, force_b64=False):
+        images,
+        labels,
+        custom_texts=None,
+        max_images=30,
+        img_width=150,
+        zoom_scale=2.5,
+        force_b64=False):
+    if custom_texts is None:
+        custom_texts = [None for _ in range(len(images))]
     html, grid_style_uuid = get_default_style(img_width, zoom_scale)
     html += '<div id="ipyplot-img-container-%s">' % grid_style_uuid
     html += ''.join([
         create_img(
             x, width=img_width, label=y,
-            grid_style_uuid=grid_style_uuid, force_b64=force_b64)
-        for x, y in zip(images[:max_images], labels[:max_images])
+            grid_style_uuid=grid_style_uuid,
+            custom_text=text, force_b64=force_b64)
+        for x, y, text in zip(
+            images[:max_images], labels[:max_images],
+            custom_texts[:max_images])
     ])
     html += '</div>'
     return html

@@ -30,65 +30,87 @@ BASE_LOCAL_URLS = [
 LOCAL_URLS_AS_PIL = list([Image.open(url) for url in BASE_LOCAL_URLS])
 
 TEST_DATA = [
-    # (imgs, b64)
-    (LOCAL_URLS_AS_PIL, True),
-    (BASE_NP_IMGS, True),
-    (pd.Series(BASE_NP_IMGS), True),
-    (np.asarray(BASE_NP_IMGS), True),
-    (np.asarray(BASE_NP_IMGS), False),
-    (np.asarray(BASE_INTERNET_URLS), False),
-    (np.asarray(BASE_INTERNET_URLS), True),
-    (np.asarray(BASE_LOCAL_URLS), True),
-    (np.asarray(BASE_LOCAL_URLS), False),
-    (np.asarray(BASE_NP_IMGS, dtype=np.float) / 255, False),
-    (np.asarray(BASE_NP_IMGS, dtype=np.float) / 255, True),
+    # (imgs)
+    (LOCAL_URLS_AS_PIL),
+    (BASE_NP_IMGS),
+    (pd.Series(BASE_NP_IMGS)),
+    (np.asarray(BASE_NP_IMGS)),
+    (np.asarray(BASE_INTERNET_URLS)),
+    (np.asarray(BASE_LOCAL_URLS)),
+    (np.asarray(BASE_NP_IMGS, dtype=np.float) / 255),
 ]
 
+TEST_CUSTOM_TEXTS = [
+    None,
+    ['a', 'b', 'a'],
+    np.asarray(['a', 'b', 'a']),
+    pd.Series(['a', 'b', 'a'])]
+
+
+@pytest.fixture(params=[True, False])
+def test_true_false(request):
+    return request.param
+
+
+@pytest.fixture(params=TEST_CUSTOM_TEXTS)
+def test_custom_texts(request):
+    return request.param
+
+
+@pytest.fixture(params=TEST_CUSTOM_TEXTS[1:])
+def test_labels(request):
+    return request.param
+
 
 @pytest.mark.parametrize(
-    "imgs, b64",
+    "imgs",
     TEST_DATA)
-def test_plot_images(capsys, imgs, b64):
+def test_plot_images(
+        capsys, test_custom_texts, test_true_false, imgs):
     ipyplot.plot_images(
         imgs,
-        labels=None,
+        labels=test_custom_texts,
+        custom_texts=test_custom_texts,
         max_images=30,
         img_width=300,
-        force_b64=b64)
+        force_b64=test_true_false)
     captured = capsys.readouterr()
-    if b64 and type(imgs[0]) is np.str_ and "http" in imgs[0]:
+    if test_true_false and type(imgs[0]) is np.str_ and "http" in imgs[0]:
         assert("Ignoring 'force_b64' flag" in captured.out)
 
     assert(str(HTML).split("'")[1] in captured.out)
 
 
 @pytest.mark.parametrize(
-    "imgs, b64",
+    "imgs",
     TEST_DATA)
-def test_plot_class_tabs(capsys, imgs, b64):
+def test_plot_class_tabs(
+        capsys, test_labels, test_custom_texts, test_true_false, imgs):
     ipyplot.plot_class_tabs(
         imgs,
-        labels=np.asarray(['a', 'b', 'b']),
+        labels=test_labels,
+        custom_texts=test_custom_texts,
         img_width=300,
-        force_b64=b64)
+        force_b64=test_true_false)
     captured = capsys.readouterr()
-    if b64 and type(imgs[0]) is np.str_ and "http" in imgs[0]:
+    if test_true_false and type(imgs[0]) is np.str_ and "http" in imgs[0]:
         assert("Ignoring 'force_b64' flag" in captured.out)
 
     assert(str(HTML).split("'")[1] in captured.out)
 
 
 @pytest.mark.parametrize(
-    "imgs, b64",
+    "imgs",
     TEST_DATA)
-def test_plot_class_representations(capsys, imgs, b64):
+def test_plot_class_representations(
+        capsys, test_labels, test_true_false, imgs):
     ipyplot.plot_class_representations(
         imgs,
-        labels=np.asarray(['a', 'b', 'b']),
+        labels=test_labels,
         img_width=300,
-        force_b64=b64)
+        force_b64=test_true_false)
     captured = capsys.readouterr()
-    if b64 and type(imgs[0]) is np.str_ and "http" in imgs[0]:
+    if test_true_false and type(imgs[0]) is np.str_ and "http" in imgs[0]:
         assert("Ignoring 'force_b64' flag" in captured.out)
 
     assert(str(HTML).split("'")[1] in captured.out)
