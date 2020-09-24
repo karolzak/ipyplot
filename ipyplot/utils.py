@@ -1,5 +1,7 @@
-import numpy as np
 from typing import Sequence
+
+import numpy as np
+from PIL import Image
 
 
 def get_class_representations(
@@ -32,3 +34,11 @@ def get_class_representations(
         out_images = images[uniques[1]]
 
     return out_images, out_labels
+
+
+def seq2arr(seq: Sequence[str or int or object]):
+    # this is a hack to make the code work with PIL images
+    if issubclass(type(seq[0]), Image.Image):
+        return np.asarray(seq, dtype=type(seq[0]))
+    else:
+        return np.asarray(seq)

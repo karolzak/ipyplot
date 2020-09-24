@@ -4,7 +4,7 @@ from PIL import Image
 
 from .html_helpers import (
     display_html, create_tabs, create_imgs_grid)
-from .utils import get_class_representations
+from .utils import get_class_representations, seq2arr
 
 
 def plot_class_tabs(
@@ -44,11 +44,7 @@ def plot_class_tabs(
     """
     assert(len(images) == len(labels))
 
-    # this is a hack to make the code work with PIL images
-    if issubclass(type(images[0]), Image.Image):
-        images = np.asarray(images, dtype=type(images[0]))
-    else:
-        images = np.asarray(images)
+    images = seq2arr(images)
     labels = np.asarray(labels)
     # ignore_list = np.asarray(ignore_list) if ignore_list is not None else ignore_list  # NOQA E501
     tabs_order = np.asarray(tabs_order) if tabs_order is not None else tabs_order  # NOQA E501
@@ -63,7 +59,7 @@ def plot_class_tabs(
 def plot_images(
         images: Sequence[object],
         labels: Sequence[str or int] = None,
-        max_images=30,
+        max_images: int = 30,
         img_width: int = 150,
         zoom_scale: float = 2.5,
         force_b64: bool = False):
@@ -93,15 +89,12 @@ def plot_images(
             You might need to set this to `True` in environments like Google colab.
             Defaults to False.
     """
-    # this is a hack to make the code work with PIL images
-    if issubclass(type(images[0]), Image.Image):
-        images = np.asarray(images, dtype=type(images[0]))
-    else:
-        images = np.asarray(images)
-    labels = np.asarray(labels) if labels is not None else labels
+    images = seq2arr(images)
 
     if labels is None:
         labels = list(range(0, len(images)))
+    else:
+        labels = np.asarray(labels)
 
     html = create_imgs_grid(
         images, labels, max_images, img_width,
@@ -144,11 +137,8 @@ def plot_class_representations(
     """
     assert(len(images) == len(labels))
 
-    # this is a hack to make the code work with PIL images
-    if issubclass(type(images[0]), Image.Image):
-        images = np.asarray(images, dtype=type(images[0]))
-    else:
-        images = np.asarray(images)
+    images = seq2arr(images)
+
     labels = np.asarray(labels)
     ignore_list = np.asarray(ignore_list) if ignore_list is not None else ignore_list  # NOQA E501
     labels_order = np.asarray(labels_order) if labels_order is not None else labels_order  # NOQA E501
