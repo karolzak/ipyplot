@@ -64,7 +64,7 @@ def create_tabs(
 
     active_tab = True
     for i, label in zip(tab_ids, tabs_order):
-        html += '<input class="ipyplot-tab-%s" type="radio" name="tabs" id="tab%s"%s/>' % (tab_id, i, ' checked ' if active_tab else '')  # NOQA E501
+        html += '<input class="ipyplot-tab-%s" type="radio" name="tabs-%s" id="tab%s"%s/>' % (tab_id, tab_id, i, ' checked ' if active_tab else '')  # NOQA E501
         html += '<label class="ipyplot-tab-label-%s" for="tab%s">%s</label>' % (tab_id, i, label)  # NOQA E501
         active_tab = False
 
@@ -105,7 +105,7 @@ def create_img(
 
     img_html = ""
     if custom_text is not None:
-        img_html += '<h4 style="font-size: 12px">%s</h4>' % custom_text
+        img_html += '<h4 style="font-size: 12px; word-wrap: break-word;">%s</h4>' % custom_text
 
     use_b64 = True
     # if image is a string (URL) display its URL
@@ -124,15 +124,19 @@ def create_img(
         img_html += '<img src="data:image/png;base64,%s"/>' % img_to_base64(image, width)  # NOQA E501
 
     html = """
-    <div class="ipyplot-holder-%(0)s">
-        <div id="ipyplot-image-%(0)s-%(1)s" class="ipyplot-imgbox-%(0)s">
-            <a class="ipyplot-close" href="#"/>
-            <a class="ipyplot-expand" href="#ipyplot-image-%(0)s-%(1)s"/>
-            <h4 style="font-size: 12px">%(2)s</h4>
+    <div class="ipyplot-placeholder-div-%(0)s">
+        <div id="ipyplot-content-div-%(0)s-%(1)s" class="ipyplot-content-div-%(0)s">
+            <h4 style="font-size: 12px; word-wrap: break-word;">%(2)s</h4>
             %(3)s
+            <a href="#!">
+                <span class="ipyplot-img-close"/>
+            </a>
+            <a href="#ipyplot-content-div-%(0)s-%(1)s">
+                <span class="ipyplot-img-expand"/>
+            </a>
         </div>
     </div>
-    """ % {'0': grid_style_uuid, '1': img_uuid, '2': label, '3': img_html}
+    """ % {'0': grid_style_uuid, '1': img_uuid, '2': label, '3': img_html}  # NOQA E501
     return html
 
 
@@ -147,7 +151,7 @@ def create_imgs_grid(
     if custom_texts is None:
         custom_texts = [None for _ in range(len(images))]
     html, grid_style_uuid = get_default_style(img_width, zoom_scale)
-    html += '<div id="ipyplot-img-container-%s">' % grid_style_uuid
+    html += '<div id="ipyplot-imgs-container-div-%s">' % grid_style_uuid
     html += ''.join([
         create_img(
             x, width=img_width, label=y,
@@ -165,42 +169,39 @@ def get_default_style(img_width, zoom_scale):
     style_uuid = shortuuid.uuid()
     html = """
         <style>
-        #ipyplot-img-container-%(0)s {
+        #ipyplot-imgs-container-div-%(0)s {
             width: 100%%;
             height: 100%%;
             margin: 0%%;
             overflow: auto;
             position: relative;
-            overflow-y:scroll;
+            overflow-y: scroll;
         }
 
-        .ipyplot-holder-%(0)s {
-            /* The width and height, you can change these */
+        div.ipyplot-placeholder-div-%(0)s {
             width: %(1)spx;
             display: inline-block;
-            margin: 5px;
+            margin: 3px;
             position: relative;
         }
 
-        .ipyplot-imgbox-%(0)s {
-            /* Inherit width and height from the .holder */
+        div.ipyplot-content-div-%(0)s {
+            width: %(1)spx;
             background: white;
             display: inline-block;
             vertical-align: top;
             text-align: center;
-            width: inherit;
             position: relative;
             border: 2px solid #ddd;
             top: 0;
             left: 0;
         }
 
-        .ipyplot-imgbox-%(0)s img {
-            /* Inherit the width and height from the parent element */
-            width: 100%%;
+        div.ipyplot-content-div-%(0)s span.ipyplot-img-close {
+            display: none;
         }
 
-        .ipyplot-imgbox-%(0)s a {
+        div.ipyplot-content-div-%(0)s span {
             width: 100%%;
             height: 100%%;
             position: absolute;
@@ -208,19 +209,18 @@ def get_default_style(img_width, zoom_scale):
             left: 0;
         }
 
-        .ipyplot-imgbox-%(0)s .ipyplot-close {
-            display: none;
+        div.ipyplot-content-div-%(0)s img {
+            width: %(1)spx;
         }
 
-        .ipyplot-imgbox-%(0)s .ipyplot-close:hover {
+        div.ipyplot-content-div-%(0)s span.ipyplot-img-close:hover {
             cursor: zoom-out;
         }
-        .ipyplot-imgbox-%(0)s .ipyplot-expand:hover {
+        div.ipyplot-content-div-%(0)s span.ipyplot-img-expand:hover {
             cursor: zoom-in;
         }
 
-        div[id^=ipyplot-image-%(0)s]:target {
-            width: 100%%;
+        div[id^=ipyplot-content-div-%(0)s]:target {
             transform: scale(%(2)s);
             transform-origin: left top;
             z-index: 5000;
@@ -229,11 +229,11 @@ def get_default_style(img_width, zoom_scale):
             position: absolute;
         }
 
-        div[id^=ipyplot-image-%(0)s]:target .ipyplot-close {
+        div[id^=ipyplot-content-div-%(0)s]:target span.ipyplot-img-close {
             display: block;
         }
 
-        div[id^=ipyplot-image-%(0)s]:target .ipyplot-expand {
+        div[id^=ipyplot-content-div-%(0)s]:target span.ipyplot-img-expand {
             display: none;
         }
         </style>
