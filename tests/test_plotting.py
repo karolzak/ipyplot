@@ -29,22 +29,23 @@ BASE_LOCAL_URLS = [
 
 LOCAL_URLS_AS_PIL = list([Image.open(url) for url in BASE_LOCAL_URLS])
 
-TEST_DATA = [
-    # (imgs)
-    (LOCAL_URLS_AS_PIL),
-    (BASE_NP_IMGS),
-    (pd.Series(BASE_NP_IMGS)),
-    (np.asarray(BASE_NP_IMGS)),
-    (np.asarray(BASE_INTERNET_URLS)),
-    (np.asarray(BASE_LOCAL_URLS)),
-    (np.asarray(BASE_NP_IMGS, dtype=np.float) / 255),
-]
-
-TEST_CUSTOM_TEXTS = [
+LABELS = [
     None,
     ['a', 'b', 'a'],
     np.asarray(['a', 'b', 'a']),
-    pd.Series(['a', 'b', 'a'])]
+    pd.Series(['a', 'b', 'a'])
+]
+
+TEST_DATA = [
+    # (imgs, labels, custom_texts)
+    (LOCAL_URLS_AS_PIL, LABELS[1], LABELS[0]),
+    (BASE_NP_IMGS, LABELS[1], LABELS[0]),
+    (pd.Series(BASE_NP_IMGS), LABELS[1], LABELS[0]),
+    (np.asarray(BASE_NP_IMGS), LABELS[1], LABELS[0]),
+    (np.asarray(BASE_INTERNET_URLS), LABELS[1], LABELS[0]),
+    (np.asarray(BASE_LOCAL_URLS), LABELS[1], LABELS[0]),
+    (np.asarray(BASE_NP_IMGS, dtype=np.float) / 255, LABELS[1], LABELS[0]),
+]
 
 
 @pytest.fixture(params=[True, False])
@@ -52,25 +53,15 @@ def test_true_false(request):
     return request.param
 
 
-@pytest.fixture(params=TEST_CUSTOM_TEXTS)
-def test_custom_texts(request):
-    return request.param
-
-
-@pytest.fixture(params=TEST_CUSTOM_TEXTS[1:])
-def test_labels(request):
-    return request.param
-
-
 @pytest.mark.parametrize(
-    "imgs",
+    "imgs, labels, custom_texts",
     TEST_DATA)
 def test_plot_images(
-        capsys, test_custom_texts, test_true_false, imgs):
+        capsys, test_true_false, imgs, labels, custom_texts):
     ipyplot.plot_images(
         imgs,
-        labels=test_custom_texts,
-        custom_texts=test_custom_texts,
+        labels=custom_texts,
+        custom_texts=custom_texts,
         max_images=30,
         img_width=300,
         force_b64=test_true_false)
@@ -82,14 +73,14 @@ def test_plot_images(
 
 
 @pytest.mark.parametrize(
-    "imgs",
+    "imgs, labels, custom_texts",
     TEST_DATA)
 def test_plot_class_tabs(
-        capsys, test_labels, test_custom_texts, test_true_false, imgs):
+        capsys, test_true_false, imgs, labels, custom_texts):
     ipyplot.plot_class_tabs(
         imgs,
-        labels=test_labels,
-        custom_texts=test_custom_texts,
+        labels=labels,
+        custom_texts=custom_texts,
         img_width=300,
         force_b64=test_true_false)
     captured = capsys.readouterr()
@@ -100,13 +91,13 @@ def test_plot_class_tabs(
 
 
 @pytest.mark.parametrize(
-    "imgs",
+    "imgs, labels, custom_texts",
     TEST_DATA)
 def test_plot_class_representations(
-        capsys, test_labels, test_true_false, imgs):
+        capsys, test_true_false, imgs, labels, custom_texts):
     ipyplot.plot_class_representations(
         imgs,
-        labels=test_labels,
+        labels=labels,
         img_width=300,
         force_b64=test_true_false)
     captured = capsys.readouterr()
