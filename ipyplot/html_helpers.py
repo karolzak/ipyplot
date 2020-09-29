@@ -90,7 +90,63 @@ def create_tabs(
     return html
 
 
+def create_html_viewer(html):
+    html_viewer_id = shortuuid.uuid()
+    html_viewer = """
+    <style>
+        #ipyplot-html-viewer-toggle-%(1)s {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            visibility: hidden;
+        }
+
+        #ipyplot-html-viewer-label-%(1)s { 
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+        }
+
+        #ipyplot-html-viewer-textarea-%(1)s {
+            background: lightgrey;
+            width: 100%%;
+            height: 0px;
+            display: none;
+        }
+
+        #ipyplot-html-viewer-toggle-%(1)s:checked ~ #ipyplot-html-viewer-textarea-%(1)s {
+            height: 200px;
+            display: block;
+        }
+
+        #ipyplot-html-viewer-toggle-%(1)s:checked + #ipyplot-html-viewer-label-%(1)s:after {
+            content: "hide html";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+        }
+    </style>
+    <div>
+        <input type="checkbox" id="ipyplot-html-viewer-toggle-%(1)s">
+        <label id="ipyplot-html-viewer-label-%(1)s" for="ipyplot-html-viewer-toggle-%(1)s">show html</label>
+        <textarea id="ipyplot-html-viewer-textarea-%(1)s" readonly>
+            %(0)s
+        </textarea>
+    </div>
+    """ % {'0': html, '1': html_viewer_id}  # NOQA E501
+    return html_viewer
+
+
 def display_html(html):
+    display(HTML(create_html_viewer(html)))
     return display(HTML(html))
 
 
@@ -105,7 +161,7 @@ def create_img(
 
     img_html = ""
     if custom_text is not None:
-        img_html += '<h4 style="font-size: 12px; word-wrap: break-word;">%s</h4>' % custom_text
+        img_html += '<h4 style="font-size: 12px; word-wrap: break-word;">%s</h4>' % custom_text  # NOQA E501
 
     use_b64 = True
     # if image is a string (URL) display its URL
