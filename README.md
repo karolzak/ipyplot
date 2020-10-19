@@ -13,31 +13,37 @@
 Displaying huge numbers of images with Python in Notebooks always was a big pain for me as I always used `matplotlib` for that task and never have I even considered if it can be done faster, easier or more efficiently.  
 Especially in one of my recent projects I had to work with a vast number of document images in a very interactive way which led me to forever rerunning notebook cells and waiting for countless seconds for `matplotlib` to do it's thing..   
 My frustration grew up to a point were I couldn't stand it anymore and started to look for other options..  
-Best solution I found involved using `IPython.display` function in connection with simple HTML. Using that approach I built a simple python package called **IPyPlot** which finally helped me cure my frustration and saved a lot of my time
+Best solution I found involved using `IPython` package in connection with simple HTML. Using that approach I built this simple python package called **IPyPlot** which finally helped me cure my frustration and saved a lot of my time.
 
 ### Features:
 - [x] Easy, fast and efficient plotting of images in python within notebooks
 - [x] Plotting functions (see [examples section](#Usage-examples) to learn more:
-  - [x] `plot_images` - simply plots all the images in a grid-like manner 
-  - [x] `plot_class_representations` - similar to `plot_images` but displays only a single image per class (based on provided labels collection)
-  - [x] `plot_class_tabs` - plots images in a grid-like manner in a separate tab for each class based on provided label
+  - [x] `plot_images` - simply plots all the images in a grid-like layout 
+  - [x] `plot_class_representations` - similar to `plot_images` but displays only the first image for each label/class (based on provided labels collection)
+  - [x] `plot_class_tabs` - plots images in a grid-like manner in a separate tab for each label/class based on provided labels
+- [x] Supported image formats:
+  - [x] Sequence of local storage URLs, e.g. `[your/dir/img1.jpg]`
+  - [x] Sequence of remote URLs, e.g. `[http://yourimages.com/img1.jpg]`
+  - [x] Sequence of `PIL.Image` objects
+  - [x] Sequence of images as `numpy.ndarray` objects
+  - [x] Supported sequence types: `list`, `numpy.ndarray`, `pandas.Series`
+- [x] Misc features:
+  - [x] `custom_texts` param to display additional texts like confidence score or some other information for each image
+  - [x] `force_b64` flag to force conversion of images from URLs to base64 format
+  - [x] click on image to enlarge 
+  - [x] control number of displayed images and their width through `max_images` and `img_width` params
+  - [x] "show html" button which reveals the HTML code used to generate plots
+  - [x] option to set specific order of labels/tabs, filter them or ignore some of the labels
 - [x] Supported notebook platforms:
   - [x] Jupyter
   - [x] Google Colab
   - [x] Azure Notebooks
   - [x] Kaggle Notebooks
-- [x] Supported image formats:
-  - [x] Array of local storage URLs, e.g. `[your/dir/img1.jpg]`
-  - [x] Array of remote URLs, e.g. `[http://yourimages.com/img1.jpg]`
-  - [x] Array of `PIL.Image` objects
-  - [x] Array of images as `numpy.ndarray` objects
-- [x] Misc:
-  - [x] `force_b64` flag to force conversion of images from URLs to base64 format
 
 ## Getting Started
 
-Checkout the [examples below](#Usage-examples) and 
-[gear-images-examples.ipynb](https://github.com/karolzak/ipyplot/blob/master/notebooks/gear-images-examples.ipynb) notebook which holds end to end examples for using **IPyPlot**.
+To start using IPyPlot, see [examples below](#Usage-examples) or go to 
+[gear-images-examples.ipynb](https://github.com/karolzak/ipyplot/blob/master/notebooks/gear-images-examples.ipynb) notebook which takes you through an end to end examples for using **IPyPlot**.
 
 ## Installation
 
@@ -62,8 +68,8 @@ To start working with `IPyPlot` you need to simply import it like this:
 import ipyplot
 ```  
 and use any of the available plotting functions shown below (notice execution times).  
-`images` - should be a numpy array of either `string` (image file paths), `PIL.Image` objects or `numpy.array` objects representing images  
-`labels` - should be a numpy array of `string`
+`images` - should be a sequence of either `string` (local or remote image file URLs), `PIL.Image` objects or `numpy.ndarray` objects representing images  
+`labels` - should be a sequence of `string` or `int`
 
 #### Display images in separate, interactive tabs for each class
 

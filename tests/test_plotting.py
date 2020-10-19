@@ -64,7 +64,7 @@ def test_plot_images(
         capsys, test_true_false, imgs, labels, custom_texts):
     ipyplot.plot_images(
         imgs,
-        labels=custom_texts,
+        labels=labels,
         custom_texts=custom_texts,
         max_images=30,
         img_width=300,
