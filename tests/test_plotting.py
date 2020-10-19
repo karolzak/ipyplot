@@ -45,6 +45,7 @@ TEST_DATA = [
     (np.asarray(BASE_INTERNET_URLS), LABELS[1], LABELS[0]),
     (np.asarray(BASE_LOCAL_URLS), LABELS[1], LABELS[0]),
     (np.asarray(BASE_NP_IMGS, dtype=np.float) / 255, LABELS[1], LABELS[0]),
+    (LOCAL_URLS_AS_PIL, LABELS[0], LABELS[0]),
     (LOCAL_URLS_AS_PIL, LABELS[1], LABELS[1]),
     (LOCAL_URLS_AS_PIL, LABELS[2], LABELS[2]),
     (LOCAL_URLS_AS_PIL, LABELS[3], LABELS[3]),
@@ -82,7 +83,7 @@ def test_plot_class_tabs(
         capsys, test_true_false, imgs, labels, custom_texts):
     ipyplot.plot_class_tabs(
         imgs,
-        labels=labels,
+        labels=labels if labels is not None else LABELS[1],
         custom_texts=custom_texts,
         img_width=300,
         force_b64=test_true_false)
@@ -100,7 +101,7 @@ def test_plot_class_representations(
         capsys, test_true_false, imgs, labels, custom_texts):
     ipyplot.plot_class_representations(
         imgs,
-        labels=labels,
+        labels=labels if labels is not None else LABELS[1],
         img_width=300,
         force_b64=test_true_false)
     captured = capsys.readouterr()
