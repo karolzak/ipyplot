@@ -1,3 +1,8 @@
+"""
+This module contains helper functions for generating HTML code
+required for displaying images, grid/tab layout and general styling.
+"""
+
 from typing import Sequence
 
 import numpy as np
@@ -128,7 +133,7 @@ def create_tabs(
             max_images=max_imgs_per_tab,
             img_width=img_width,
             zoom_scale=zoom_scale,
-            custom_texts=custom_texts[tab_imgs_mask] if custom_texts else None,
+            custom_texts=custom_texts[tab_imgs_mask] if custom_texts is not None else None,  # NOQA E501
             force_b64=force_b64)
 
         html += '</div>'
