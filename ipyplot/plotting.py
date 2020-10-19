@@ -1,3 +1,8 @@
+"""
+This is the main module of IPyPlot package.
+It contains all the user-facing functions for displaying images in Python Notebooks.
+"""  # NOQA E501
+
 import numpy as np
 from typing import Sequence
 

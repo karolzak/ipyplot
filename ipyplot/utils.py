@@ -1,3 +1,7 @@
+"""
+Misc utils for IPyPlot package.
+"""
+
 from typing import Sequence
 
 import numpy as np

@@ -1,13 +1,18 @@
+"""
+Helper methods for working with images.
+"""
+
 import base64
 import io
 
 import numpy as np
 from numpy import str_
 import PIL
+from PIL import Image
 
 
 def rescale_to_width(
-        img: PIL.Image,
+        img: Image,
         target_width: int):
     """Helper function to rescale image to `target_width`.
 
