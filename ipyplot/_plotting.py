@@ -3,12 +3,12 @@ This is the main module of IPyPlot package.
 It contains all the user-facing functions for displaying images in Python Notebooks.
 """  # NOQA E501
 
-import numpy as np
+import numpy as _np
 from typing import Sequence
 
-from .html_helpers import (
-    display_html, create_tabs, create_imgs_grid)
-from .utils import get_class_representations, seq2arr
+from ._html_helpers import (
+    _display_html, _create_tabs, _create_imgs_grid)
+from ._utils import _get_class_representations, _seq2arr
 
 
 def plot_class_tabs(
@@ -62,13 +62,13 @@ def plot_class_tabs(
     assert(len(images) == len(labels))
 
     # convert to numpy.ndarray for further processing
-    images = seq2arr(images)
-    labels = np.asarray(labels)
-    tabs_order = np.asarray(tabs_order) if tabs_order is not None else tabs_order  # NOQA E501
-    custom_texts = np.asarray(custom_texts) if custom_texts is not None else custom_texts  # NOQA E501
+    images = _seq2arr(images)
+    labels = _np.asarray(labels)
+    tabs_order = _np.asarray(tabs_order) if tabs_order is not None else tabs_order  # NOQA E501
+    custom_texts = _np.asarray(custom_texts) if custom_texts is not None else custom_texts  # NOQA E501
 
     # run html helper function to generate html content
-    html = create_tabs(
+    html = _create_tabs(
         images=images,
         labels=labels,
         custom_texts=custom_texts,
@@ -78,7 +78,7 @@ def plot_class_tabs(
         force_b64=force_b64,
         tabs_order=tabs_order)
 
-    display_html(html)
+    _display_html(html)
 
 
 def plot_images(
@@ -125,16 +125,16 @@ def plot_images(
         Defaults to False.
     """  # NOQA E501
 
-    images = seq2arr(images)
+    images = _seq2arr(images)
 
     if labels is None:
         labels = list(range(0, len(images)))
     else:
-        labels = np.asarray(labels)
+        labels = _np.asarray(labels)
 
-    custom_texts = np.asarray(custom_texts) if custom_texts is not None else custom_texts  # NOQA E501
+    custom_texts = _np.asarray(custom_texts) if custom_texts is not None else custom_texts  # NOQA E501
 
-    html = create_imgs_grid(
+    html = _create_imgs_grid(
         images=images,
         labels=labels,
         custom_texts=custom_texts,
@@ -143,7 +143,7 @@ def plot_images(
         zoom_scale=zoom_scale,
         force_b64=force_b64)
 
-    display_html(html)
+    _display_html(html)
 
 
 def plot_class_representations(
@@ -193,13 +193,13 @@ def plot_class_representations(
 
     assert(len(images) == len(labels))
 
-    images = seq2arr(images)
+    images = _seq2arr(images)
 
-    labels = np.asarray(labels)
-    ignore_labels = np.asarray(ignore_labels) if ignore_labels is not None else ignore_labels  # NOQA E501
-    labels_order = np.asarray(labels_order) if labels_order is not None else labels_order  # NOQA E501
+    labels = _np.asarray(labels)
+    ignore_labels = _np.asarray(ignore_labels) if ignore_labels is not None else ignore_labels  # NOQA E501
+    labels_order = _np.asarray(labels_order) if labels_order is not None else labels_order  # NOQA E501
 
-    images, labels = get_class_representations(
+    images, labels = _get_class_representations(
         images, labels, ignore_labels, labels_order)
 
     plot_images(

@@ -6,7 +6,7 @@ import pandas as pd
 
 sys.path.append(".")
 sys.path.append("../.")
-from ipyplot.utils import get_class_representations
+from ipyplot._utils import _get_class_representations
 
 
 TEST_OUT_IMAGES = ['a', 'b', 'c']
@@ -97,7 +97,7 @@ TEST_DATA = [
     TEST_DATA)
 def test_get_class_representations(
         images, labels, ignore_labels, labels_order, out_images, out_labels):
-    images, labels = get_class_representations(
+    images, labels = _get_class_representations(
         images,
         labels=labels,
         ignore_labels=ignore_labels,

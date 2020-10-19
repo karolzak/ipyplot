@@ -11,7 +11,7 @@ import PIL
 from PIL import Image
 
 
-def rescale_to_width(
+def _rescale_to_width(
         img: Image,
         target_width: int):
     """Helper function to rescale image to `target_width`.
@@ -29,11 +29,11 @@ def rescale_to_width(
         Rescaled image object
     """
     w, h = img.size
-    rescaled_img = img.resize(scale_wh_by_target_width(w, h, target_width))
+    rescaled_img = img.resize(_scale_wh_by_target_width(w, h, target_width))
     return rescaled_img
 
 
-def scale_wh_by_target_width(w: int, h: int, target_width: int):
+def _scale_wh_by_target_width(w: int, h: int, target_width: int):
     """Helper functions for scaling width and height based on target width.
 
     Parameters
@@ -54,7 +54,7 @@ def scale_wh_by_target_width(w: int, h: int, target_width: int):
     return int(w * scale), int(h * scale)
 
 
-def img_to_base64(
+def _img_to_base64(
         image: str or str_ or np.ndarray or PIL.Image,
         target_width: int = None):
     """Converts image to base64 string.
@@ -87,7 +87,7 @@ def img_to_base64(
 
     # rescale image based on target_width
     if target_width:
-        image = rescale_to_width(image, target_width)
+        image = _rescale_to_width(image, target_width)
     # save image object to bytes stream
     output = io.BytesIO()
     image.save(output, format='PNG')

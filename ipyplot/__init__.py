@@ -11,15 +11,14 @@ ipyplot.plot_images(images=images, labels=labels, ..)
 ```
 """  # NOQA E501
 
-import sys
+import sys as _sys
 
-from .plotting import *
+from ._plotting import plot_images, plot_class_tabs, plot_class_representations
 
-name = "ipyplot"
-
+__name__ = "IPyPlot"
 __version__ = "1.1.0"
 
-if 'google.colab' in sys.modules:  # pragma: no cover
+if 'google.colab' in _sys.modules:  # pragma: no cover
     print(
         """
         WARNING! Google Colab Environment detected!

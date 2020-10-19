@@ -9,7 +9,7 @@ import numpy as np
 import shortuuid
 from numpy import str_
 
-from .img_helpers import img_to_base64
+from ._img_helpers import _img_to_base64
 
 try:
     from IPython.display import display, HTML
@@ -17,7 +17,7 @@ except Exception:  # pragma: no cover
     raise Exception('IPython not detected. Plotting without IPython is not possible')  # NOQA E501
 
 
-def create_tabs(
+def _create_tabs(
         images: Sequence[object],
         labels: Sequence[str or int],
         custom_texts: Sequence[str] = None,
@@ -127,7 +127,7 @@ def create_tabs(
         active_tab = False
 
         tab_imgs_mask = labels == label
-        html += create_imgs_grid(
+        html += _create_imgs_grid(
             images=images[tab_imgs_mask],
             labels=list(range(0, max_imgs_per_tab)),
             max_images=max_imgs_per_tab,
@@ -143,7 +143,7 @@ def create_tabs(
     return html
 
 
-def create_html_viewer(
+def _create_html_viewer(
         html: str):
     """Creates HTML code for HTML previewer.
 
@@ -212,7 +212,7 @@ def create_html_viewer(
     return html_viewer
 
 
-def display_html(html: str):
+def _display_html(html: str):
     """Simply displays provided HTML string using IPython.display function.
 
     Parameters
@@ -225,11 +225,11 @@ def display_html(html: str):
     handle: DisplayHandle
         Returns a handle on updatable displays
     """
-    display(HTML(create_html_viewer(html)))
+    display(HTML(_create_html_viewer(html)))
     return display(HTML(html))
 
 
-def create_img(
+def _create_img(
         image: str or object,
         label: str or int,
         width: int,
@@ -283,7 +283,7 @@ def create_img(
     # if image is not a string it means its either PIL.Image or np.ndarray
     # that's why it's necessary to use conversion to b64
     if use_b64:
-        img_html += '<img src="data:image/png;base64,%s"/>' % img_to_base64(image, width)  # NOQA E501
+        img_html += '<img src="data:image/png;base64,%s"/>' % _img_to_base64(image, width)  # NOQA E501
 
     html = """
     <div class="ipyplot-placeholder-div-%(0)s">
@@ -302,7 +302,7 @@ def create_img(
     return html
 
 
-def create_imgs_grid(
+def _create_imgs_grid(
         images: Sequence[object],
         labels: Sequence[str or int],
         custom_texts: Sequence[str] = None,
@@ -353,11 +353,11 @@ def create_imgs_grid(
         custom_texts = [None for _ in range(len(images))]
 
     # create code with style definitions
-    html, grid_style_uuid = get_default_style(img_width, zoom_scale)
+    html, grid_style_uuid = _get_default_style(img_width, zoom_scale)
 
     html += '<div id="ipyplot-imgs-container-div-%s">' % grid_style_uuid
     html += ''.join([
-        create_img(
+        _create_img(
             x, width=img_width, label=y,
             grid_style_uuid=grid_style_uuid,
             custom_text=text, force_b64=force_b64
@@ -370,7 +370,7 @@ def create_imgs_grid(
     return html
 
 
-def get_default_style(img_width: int, zoom_scale: float):
+def _get_default_style(img_width: int, zoom_scale: float):
     """Creates HTML code with default style definitions required for elements to be properly displayed
 
     Parameters

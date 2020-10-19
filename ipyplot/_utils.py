@@ -8,7 +8,7 @@ import numpy as np
 from PIL import Image
 
 
-def get_class_representations(
+def _get_class_representations(
         images: Sequence[object],
         labels: Sequence[str or int],
         ignore_labels: Sequence[str or int] = None,
@@ -77,7 +77,7 @@ def get_class_representations(
     return out_images, out_labels
 
 
-def seq2arr(seq: Sequence[str or int or object]):
+def _seq2arr(seq: Sequence[str or int or object]):
     """Convert sequence to numpy.ndarray.
 
     Parameters
