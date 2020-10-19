@@ -1,3 +1,5 @@
+from typing import Sequence
+
 import numpy as np
 import shortuuid
 from numpy import str_
@@ -11,14 +13,15 @@ except Exception:  # pragma: no cover
 
 
 def create_tabs(
-        images,
-        labels,
-        custom_texts=None,
-        max_imgs_per_tab=30,
-        img_width=150,
-        zoom_scale=2.5,
-        force_b64=False,
-        tabs_order=None):
+        images: Sequence[object],
+        labels: Sequence[str or int],
+        custom_texts: Sequence[str],
+        max_imgs_per_tab: int = 30,
+        img_width: int = 150,
+        zoom_scale: float = 2.5,
+        force_b64: bool = False,
+        tabs_order: Sequence[str or int] = None):
+
     tab_id = shortuuid.uuid()
 
     if tabs_order is None:
@@ -90,7 +93,7 @@ def create_tabs(
     return html
 
 
-def create_html_viewer(html):
+def create_html_viewer(html: str):
     html_viewer_id = shortuuid.uuid()
     html_viewer = """
     <style>
@@ -145,23 +148,24 @@ def create_html_viewer(html):
     return html_viewer
 
 
-def display_html(html):
+def display_html(html: str):
     display(HTML(create_html_viewer(html)))
     return display(HTML(html))
 
 
 def create_img(
-        image,
-        label,
-        width,
-        grid_style_uuid,
-        custom_text=None,
-        force_b64=False):
+        image: str or object,
+        label: str or int,
+        width: int,
+        grid_style_uuid: str,
+        custom_text: str = None,
+        force_b64: bool = False):
+
     img_uuid = shortuuid.uuid()
 
     img_html = ""
     if custom_text is not None:
-        img_html += '<h4 style="font-size: 12px; word-wrap: break-word;">%s</h4>' % custom_text  # NOQA E501
+        img_html += '<h4 style="font-size: 12px; word-wrap: break-word;">%s</h4>' % str(custom_text)  # NOQA E501
 
     use_b64 = True
     # if image is a string (URL) display its URL
@@ -197,22 +201,25 @@ def create_img(
 
 
 def create_imgs_grid(
-        images,
-        labels,
-        custom_texts=None,
-        max_images=30,
-        img_width=150,
-        zoom_scale=2.5,
-        force_b64=False):
+        images: Sequence[object],
+        labels: Sequence[str or int],
+        custom_texts: Sequence[str] = None,
+        max_images: int = 30,
+        img_width: int = 150,
+        zoom_scale: float = 2.5,
+        force_b64: bool = False):
+
     if custom_texts is None:
         custom_texts = [None for _ in range(len(images))]
+
     html, grid_style_uuid = get_default_style(img_width, zoom_scale)
     html += '<div id="ipyplot-imgs-container-div-%s">' % grid_style_uuid
     html += ''.join([
         create_img(
             x, width=img_width, label=y,
             grid_style_uuid=grid_style_uuid,
-            custom_text=text, force_b64=force_b64)
+            custom_text=text, force_b64=force_b64
+        )
         for x, y, text in zip(
             images[:max_images], labels[:max_images],
             custom_texts[:max_images])
@@ -221,7 +228,7 @@ def create_imgs_grid(
     return html
 
 
-def get_default_style(img_width, zoom_scale):
+def get_default_style(img_width: int, zoom_scale: float):
     style_uuid = shortuuid.uuid()
     html = """
         <style>

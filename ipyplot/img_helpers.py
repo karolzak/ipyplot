@@ -6,7 +6,9 @@ from numpy import str_
 from PIL import Image
 
 
-def resize_with_aspect_ratio(img, max_size=1000):
+def resize_with_aspect_ratio(
+        img: object,
+        max_size: int):
     """Helper function to resize image against the longer edge
 
     Args:
@@ -21,14 +23,16 @@ def resize_with_aspect_ratio(img, max_size=1000):
             Resized image object
     """
     w, h = img.size
-    aspect_ratio = min(max_size/w, max_size/h)
+    aspect_ratio = min(max_size / w, max_size / h)
     resized_img = img.resize(
         (int(w * aspect_ratio), int(h * aspect_ratio))
     )
     return resized_img
 
 
-def img_to_base64(image, max_size):
+def img_to_base64(
+        image: str or str_ or np.ndarray or object,
+        max_size: int):
     if type(image) is np.ndarray:
         if image.dtype in [np.float, np.float32, np.float64]:
             image = image * 255 if image.max() <= 1.0 else image

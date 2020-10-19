@@ -9,7 +9,7 @@ from .utils import get_class_representations, seq2arr
 def plot_class_tabs(
         images: Sequence[object],
         labels: Sequence[str or int],
-        custom_texts: Sequence[str or int or float] = None,
+        custom_texts: Sequence[str] = None,
         max_imgs_per_tab: int = 15,
         img_width: int = 150,
         zoom_scale: float = 2.5,
@@ -66,7 +66,7 @@ def plot_class_tabs(
 def plot_images(
         images: Sequence[object],
         labels: Sequence[str or int] = None,
-        custom_texts: Sequence[str or int or float] = None,
+        custom_texts: Sequence[str] = None,
         max_images: int = 30,
         img_width: int = 150,
         zoom_scale: float = 2.5,
@@ -121,10 +121,10 @@ def plot_images(
 def plot_class_representations(
         images: Sequence[object],
         labels: Sequence[str or int],
-        ignore_list: Sequence[str or int] = ['-1', 'unknown'],
         img_width: int = 150,
         zoom_scale: float = 2.5,
         force_b64: bool = False,
+        ignore_list: Sequence[str or int] = None,
         labels_order: Sequence[str or int] = None):
     """
     Function used to display first image from each cluster/class
