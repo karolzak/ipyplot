@@ -10,46 +10,59 @@ def plot_class_tabs(
         images: Sequence[object],
         labels: Sequence[str or int],
         custom_texts: Sequence[str] = None,
-        max_imgs_per_tab: int = 15,
+        max_imgs_per_tab: int = 30,
         img_width: int = 150,
         zoom_scale: float = 2.5,
         force_b64: bool = False,
         tabs_order: Sequence[str or int] = None):
     """
-    Efficient and convenient way of displaying images in interactive tabs
-    grouped by labels/clusters.
-    It's using IPython.display function and HTML under the hood
+    Efficient and convenient way of displaying images in interactive tabs grouped by labels.
+    For tabs ordering and filtering check out `tabs_order` param.
+    This function (same as the whole IPyPlot package) is using IPython and HTML under the hood.
 
-    Args:
-        images (numpy.ndarray):
-            Numpy array of image file paths or PIL.Image objects
-        labels (numpy.ndarray):
-            Numpy array of corresponding classes
-        max_imgs_per_tab (int, optional):
-            How many samples from each cluster/class to display.
-            Defaults to 15.
-        img_width (int, optional):
-            Image width.
-            Adjust to change the number of images per row.
-            Defaults to 150.
-        zoom_scale (float, optional):
-            Scale for zoom-in-on-click feature.
-            Best to keep between 1.0~5.0.
-            Defaults to 2.5.
-        force_b64 (boolean, optional):
-            You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  # NOQA E501
-            Do mind that using b64 conversion vs reading directly from filepath will be slower.  # NOQA E501
-            You might need to set this to `True` in environments like Google colab.
-            Defaults to False.
-    """
+    Parameters
+    ----------
+    images : Sequence[object]
+        List of images to be displayed in tabs layout.
+        Currently supports images in the following formats:
+        - str (local/remote URL)
+        - PIL.Image
+        - numpy.ndarray
+    labels : Sequence[str or int]
+        List of classes/labels for images to be grouped by.
+        Must be same length as `images`.
+    custom_texts : Sequence[str], optional
+        List of custom strings to be drawn above each image.
+        Must be same length as `images`, by default `None`.
+    max_imgs_per_tab : int, optional
+        How many samples from each label/class to display in a tab
+        Defaults to 30.
+    img_width : int, optional
+        Image width in px, by default 150
+    zoom_scale : float, optional
+        Scale for zoom-in-on-click feature.
+        Best to keep between 1.0~5.0.
+        Defaults to 2.5.
+    force_b64 : bool, optional
+        You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  
+        Do mind that using b64 conversion vs reading directly from filepath will be slower.
+        You might need to set this to `True` in environments like Google colab.
+        Defaults to False.
+    tabs_order : Sequence[str or int], optional
+        Order of tabs based on provided list of classes/labels.
+        By default, tabs will be sorted alphabetically based on provided labels.
+        This param can be also used as a filtering mechanism - only labels provided in `tabs_order` param will be displayed as tabs.
+        Defaults to None.
+    """  # NOQA E501
     assert(len(images) == len(labels))
 
+    # convert to numpy.ndarray for further processing
     images = seq2arr(images)
     labels = np.asarray(labels)
-    # ignore_list = np.asarray(ignore_list) if ignore_list is not None else ignore_list  # NOQA E501
     tabs_order = np.asarray(tabs_order) if tabs_order is not None else tabs_order  # NOQA E501
     custom_texts = np.asarray(custom_texts) if custom_texts is not None else custom_texts  # NOQA E501
 
+    # run html helper function to generate html content
     html = create_tabs(
         images=images,
         labels=labels,
@@ -72,31 +85,41 @@ def plot_images(
         zoom_scale: float = 2.5,
         force_b64: bool = False):
     """
-    Displays images based on the provided paths
+    Simply displays images provided in `images` param in grid-like layout.
+    Check optional params for max number of images to plot, labels and custom texts to add to each image, image width and other options.
+    This function (same as the whole IPyPlot package) is using IPython and HTML under the hood.
 
-    Args:
-        images (array):
-            Array of coresponding file paths.
-        labels (array, optional):
-            Array of labels/cluster names.
-            If None it will just assign numbers going from 0
-            Defaults to None.
-        max_images (int, optional):
-            Max number of images to display.
-            Defaults to 30.
-        img_width (int, optional):
-            Width of the displayed image.
-            Defaults to 150.
-        zoom_scale (float, optional):
-            Scale for zoom-in-on-click feature.
-            Best to keep between 1.0~5.0.
-            Defaults to 2.5.
-        force_b64 (boolean, optional):
-            You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  # NOQA E501
-            Do mind that using b64 conversion vs reading directly from filepath will be slower.  # NOQA E501
-            You might need to set this to `True` in environments like Google colab.
-            Defaults to False.
-    """
+    Parameters
+    ----------
+    images : Sequence[object]
+        List of images to be displayed in tabs layout.
+        Currently supports images in the following formats:
+        - str (local/remote URL)
+        - PIL.Image
+        - numpy.ndarray
+    labels : Sequence[str or int], optional
+        List of classes/labels for images to be grouped by.
+        Must be same length as `images`.
+        Defaults to None.
+    custom_texts : Sequence[str], optional
+        List of custom strings to be drawn above each image.
+        Must be same length as `images`, by default `None`.
+    max_images : int, optional
+        How many images to display (takes first N images).
+        Defaults to 30.
+    img_width : int, optional
+        Image width in px, by default 150
+    zoom_scale : float, optional
+        Scale for zoom-in-on-click feature.
+        Best to keep between 1.0~5.0.
+        Defaults to 2.5.
+    force_b64 : bool, optional
+        You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  
+        Do mind that using b64 conversion vs reading directly from filepath will be slower.
+        You might need to set this to `True` in environments like Google colab.
+        Defaults to False.
+    """  # NOQA E501
+
     images = seq2arr(images)
 
     if labels is None:
@@ -124,42 +147,55 @@ def plot_class_representations(
         img_width: int = 150,
         zoom_scale: float = 2.5,
         force_b64: bool = False,
-        ignore_list: Sequence[str or int] = None,
+        ignore_labels: Sequence[str or int] = None,
         labels_order: Sequence[str or int] = None):
     """
-    Function used to display first image from each cluster/class
+    Displays single image (first occurence for each class) for each label/class in grid-like layout.
+    Check optional params for labels filtering, ignoring and ordering, image width and other options.
+    This function (same as the whole IPyPlot package) is using IPython and HTML under the hood.
 
-    Args:
-        images (array):
-            Array of image file paths or PIL.Image objects.
-        labels (array):
-            Array of labels/classes names.
-        ignore_list (list, optional):
-            List of classes to ignore when plotting.
-            Defaults to ['-1', 'unknown'].
-        img_width (int, optional):
-            Width of the displayed image.
-            Defaults to 150.
-        zoom_scale (float, optional):
-            Scale for zoom-in-on-click feature.
-            Best to keep between 1.0~5.0.
-            Defaults to 2.5.
-        force_b64 (boolean, optional):
-            You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  # NOQA E501
-            Do mind that using b64 conversion vs reading directly from filepath will be slower.  # NOQA E501
-            You might need to set this to `True` in environments like Google colab.
-            Defaults to False.
-    """
+    Parameters
+    ----------
+    images : Sequence[object]
+        List of images to be displayed in tabs layout.
+        Currently supports images in the following formats:
+        - str (local/remote URL)
+        - PIL.Image
+        - numpy.ndarray
+    labels : Sequence[str or int]
+        List of classes/labels for images to be grouped by.
+        Must be same length as `images`.
+    img_width : int, optional
+        Image width in px, by default 150
+    zoom_scale : float, optional
+        Scale for zoom-in-on-click feature.
+        Best to keep between 1.0~5.0.
+        Defaults to 2.5.
+    force_b64 : bool, optional
+        You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  
+        Do mind that using b64 conversion vs reading directly from filepath will be slower.
+        You might need to set this to `True` in environments like Google colab.
+        Defaults to False.
+    ignore_labels : Sequence[str or int], optional
+        List of labels to ignore.
+        Defaults to None.
+    labels_order : Sequence[str or int], optional
+        Defines order of labels based on provided list of classes/labels.
+        By default, images will be sorted alphabetically based on provided label.
+        This param can be also used as a filtering mechanism - only images for labels provided in `labels_order` param will be displayed.
+        Defaults to None.
+    """  # NOQA E501
+
     assert(len(images) == len(labels))
 
     images = seq2arr(images)
 
     labels = np.asarray(labels)
-    ignore_list = np.asarray(ignore_list) if ignore_list is not None else ignore_list  # NOQA E501
+    ignore_labels = np.asarray(ignore_labels) if ignore_labels is not None else ignore_labels  # NOQA E501
     labels_order = np.asarray(labels_order) if labels_order is not None else labels_order  # NOQA E501
 
     images, labels = get_class_representations(
-        images, labels, ignore_list, labels_order)
+        images, labels, ignore_labels, labels_order)
 
     plot_images(
         images=images,

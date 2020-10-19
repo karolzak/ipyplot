@@ -93,14 +93,14 @@ TEST_DATA = [
 
 
 @pytest.mark.parametrize(
-    "images, labels, ignore_list, labels_order, out_images, out_labels",
+    "images, labels, ignore_labels, labels_order, out_images, out_labels",
     TEST_DATA)
 def test_get_class_representations(
-        images, labels, ignore_list, labels_order, out_images, out_labels):
+        images, labels, ignore_labels, labels_order, out_images, out_labels):
     images, labels = get_class_representations(
         images,
         labels=labels,
-        ignore_list=ignore_list,
+        ignore_labels=ignore_labels,
         labels_order=labels_order)
     assert all(images == out_images)
     assert all(labels == out_labels)

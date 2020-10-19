@@ -15,20 +15,61 @@ except Exception:  # pragma: no cover
 def create_tabs(
         images: Sequence[object],
         labels: Sequence[str or int],
-        custom_texts: Sequence[str],
+        custom_texts: Sequence[str] = None,
         max_imgs_per_tab: int = 30,
         img_width: int = 150,
         zoom_scale: float = 2.5,
         force_b64: bool = False,
         tabs_order: Sequence[str or int] = None):
+    """
+    Generates HTML code required to display images in interactive tabs grouped by labels.
+    For tabs ordering and filtering check out `tabs_order` param.
 
-    tab_id = shortuuid.uuid()
+    Parameters
+    ----------
+    images : Sequence[object]
+        List of images to be displayed in tabs layout.
+        Currently supports images in the following formats:
+        - str (local/remote URL)
+        - PIL.Image
+        - numpy.ndarray
+    labels : Sequence[str or int]
+        List of classes/labels for images to be grouped by.
+        Must be same length as `images`.
+    custom_texts : Sequence[str], optional
+        List of custom strings to be drawn above each image.
+        Must be same length as `images`, by default `None`.
+    max_imgs_per_tab : int, optional
+        How many samples from each label/class to display in a tab
+        Defaults to 30.
+    img_width : int, optional
+        Image width in px, by default 150
+    zoom_scale : float, optional
+        Scale for zoom-in-on-click feature.
+        Best to keep between 1.0~5.0.
+        Defaults to 2.5.
+    force_b64 : bool, optional
+        You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  
+        Do mind that using b64 conversion vs reading directly from filepath will be slower.
+        You might need to set this to `True` in environments like Google colab.
+        Defaults to False.
+    tabs_order : Sequence[str or int], optional
+        Order of tabs based on provided list of classes/labels.
+        By default, tabs will be sorted alphabetically based on provided labels.
+        This param can be also used as a filtering mechanism - only labels provided in `tabs_order` param will be displayed as tabs.
+        Defaults to None.
+    """  # NOQA E501
 
+    tab_layout_id = shortuuid.uuid()
+
+    # if `tabs_order` is None use sorted unique values from `labels`
     if tabs_order is None:
         tabs_order = np.unique(labels)
 
-    if custom_texts is None:
-        custom_texts = np.asarray([None for _ in range(len(images))])
+    # assure same length for images, labels and custom_texts sequences
+    assert(len(labels) == len(images))
+    if custom_texts is not None:
+        assert(len(custom_texts) == len(images))
 
     html = '<div>'
     tab_ids = [shortuuid.uuid() for label in tabs_order]
@@ -57,7 +98,7 @@ def create_tabs(
             input.ipyplot-tab-%(0)s ~ .tab {
                 display: none
             }
-    """ % {'0': tab_id}
+    """ % {'0': tab_layout_id}
 
     for i in tab_ids:
         style_html += '#tab%s:checked ~ .tab.content%s,' % (i, i)
@@ -65,14 +106,18 @@ def create_tabs(
 
     html += style_html
 
+    # sets the first tab to active/selected state
     active_tab = True
     for i, label in zip(tab_ids, tabs_order):
-        html += '<input class="ipyplot-tab-%s" type="radio" name="tabs-%s" id="tab%s"%s/>' % (tab_id, tab_id, i, ' checked ' if active_tab else '')  # NOQA E501
-        html += '<label class="ipyplot-tab-label-%s" for="tab%s">%s</label>' % (tab_id, i, label)  # NOQA E501
+        # define radio type tab buttons for each label
+        html += '<input class="ipyplot-tab-%s" type="radio" name="tabs-%s" id="tab%s"%s/>' % (tab_layout_id, tab_layout_id, i, ' checked ' if active_tab else '')  # NOQA E501
+        html += '<label class="ipyplot-tab-label-%s" for="tab%s">%s</label>' % (tab_layout_id, i, label)  # NOQA E501
         active_tab = False
 
+    # sets the first tab to active/selected state
     active_tab = True
     for i, label in zip(tab_ids, tabs_order):
+        # define content for each tab
         html += '<div class="tab content%s">' % i  # NOQA E501
         active_tab = False
 
@@ -83,7 +128,7 @@ def create_tabs(
             max_images=max_imgs_per_tab,
             img_width=img_width,
             zoom_scale=zoom_scale,
-            custom_texts=custom_texts[tab_imgs_mask],
+            custom_texts=custom_texts[tab_imgs_mask] if custom_texts else None,
             force_b64=force_b64)
 
         html += '</div>'
@@ -93,7 +138,21 @@ def create_tabs(
     return html
 
 
-def create_html_viewer(html: str):
+def create_html_viewer(
+        html: str):
+    """Creates HTML code for HTML previewer.
+
+    Parameters
+    ----------
+    html : str
+        HTML content to be displayed in HTML viewer.
+
+    Returns
+    -------
+    str
+        HTML code for HTML previewer control.
+    """
+
     html_viewer_id = shortuuid.uuid()
     html_viewer = """
     <style>
@@ -149,6 +208,18 @@ def create_html_viewer(html: str):
 
 
 def display_html(html: str):
+    """Simply displays provided HTML string using IPython.display function.
+
+    Parameters
+    ----------
+    html : str
+        HTML code to be displayed.
+
+    Returns
+    -------
+    handle: DisplayHandle
+        Returns a handle on updatable displays
+    """
     display(HTML(create_html_viewer(html)))
     return display(HTML(html))
 
@@ -160,6 +231,32 @@ def create_img(
         grid_style_uuid: str,
         custom_text: str = None,
         force_b64: bool = False):
+    """Helper function to generate HTML code for displaying images along with corresponding texts.
+
+    Parameters
+    ----------
+    image : str or object
+        Image object or string URL to local/external image file.
+    label : str or int
+        Label/class string to be displayed above the image.
+    width : int
+        Image width value in pixels.
+    grid_style_uuid : str
+        Unique identifier used to connect image style with specific style definition.
+    custom_text : str, optional
+        Additional text to be displayed above the image but below the label name.
+        Defaults to None.
+    force_b64 : bool, optional
+        You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  
+        Do mind that using b64 conversion vs reading directly from filepath will be slower.
+        You might need to set this to `True` in environments like Google colab.
+        Defaults to False.
+
+    Returns
+    -------
+    str
+        Output HTML code.
+    """  # NOQA E501
 
     img_uuid = shortuuid.uuid()
 
@@ -208,11 +305,51 @@ def create_imgs_grid(
         img_width: int = 150,
         zoom_scale: float = 2.5,
         force_b64: bool = False):
+    """
+    Creates HTML code for displaying images provided in `images` param in grid-like layout.
+    Check optional params for max number of images to plot, labels and custom texts to add to each image, image width and other options.
+
+    Parameters
+    ----------
+    images : Sequence[object]
+        List of images to be displayed in tabs layout.
+        Currently supports images in the following formats:
+        - str (local/remote URL)
+        - PIL.Image
+        - numpy.ndarray
+    labels : Sequence[str or int]
+        List of classes/labels for images to be grouped by.
+        Must be same length as `images`.
+    custom_texts : Sequence[str], optional
+        List of custom strings to be drawn above each image.
+        Must be same length as `images`, by default `None`.
+    max_images : int, optional
+        How many images to display (takes first N images).
+        Defaults to 30.
+    img_width : int, optional
+        Image width in px, by default 150
+    zoom_scale : float, optional
+        Scale for zoom-in-on-click feature.
+        Best to keep between 1.0~5.0.
+        Defaults to 2.5.
+    force_b64 : bool, optional
+        You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  
+        Do mind that using b64 conversion vs reading directly from filepath will be slower.
+        You might need to set this to `True` in environments like Google colab.
+        Defaults to False.
+
+    Returns
+    -------
+    str
+        Output HTML code.
+    """  # NOQA E501
 
     if custom_texts is None:
         custom_texts = [None for _ in range(len(images))]
 
+    # create code with style definitions
     html, grid_style_uuid = get_default_style(img_width, zoom_scale)
+
     html += '<div id="ipyplot-imgs-container-div-%s">' % grid_style_uuid
     html += ''.join([
         create_img(
@@ -229,6 +366,21 @@ def create_imgs_grid(
 
 
 def get_default_style(img_width: int, zoom_scale: float):
+    """Creates HTML code with default style definitions required for elements to be properly displayed
+
+    Parameters
+    ----------
+    img_width : int
+        Image width in pixels.
+    zoom_scale : float
+        Scale for zoom-in-on-click feature.
+        Best to keep between 1.0~5.0.
+
+    Returns
+    -------
+    str
+        Output HTML code.
+    """  # NOQA E501
     style_uuid = shortuuid.uuid()
     html = """
         <style>
