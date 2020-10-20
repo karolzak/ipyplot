@@ -130,3 +130,8 @@ dmypy.json
 .vscode
 
 datasets/*
+notebooks/*.jpg
+notebooks/*.jpeg
+notebooks/*.tif
+notebooks/*.tiff
+notebooks/*.png
