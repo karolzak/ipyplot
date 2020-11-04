@@ -144,7 +144,7 @@ def test_saving_output(
             output_img_path=test_out_path)
 
         assert os.path.exists(test_out_path)
-        assert os.stat(test_out_path).st_size > 20000
+        assert os.stat(test_out_path).st_size > 10000
         # assert filecmp.cmp(exp_output, test_out_path, shallow=False)
 
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -155,5 +155,5 @@ def test_saving_output(
             force_b64=b64,
             output_img_path=test_out_path)
         assert os.path.exists(test_out_path)
-        assert os.stat(test_out_path).st_size > 20000
+        assert os.stat(test_out_path).st_size > 10000
         # assert filecmp.cmp(exp_output, test_out_path, shallow=False)
