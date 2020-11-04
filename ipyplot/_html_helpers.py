@@ -3,6 +3,7 @@ This module contains helper functions for generating HTML code
 required for displaying images, grid/tab layout and general styling.
 """
 
+import os
 from typing import Sequence
 
 import numpy as np
@@ -25,7 +26,7 @@ def _create_tabs(
         img_width: int = 150,
         zoom_scale: float = 2.5,
         force_b64: bool = False,
-        tabs_order: Sequence[str or int] = None):
+        tabs_order: Sequence[str or int] = None) -> str:
     """
     Generates HTML code required to display images in interactive tabs grouped by labels.
     For tabs ordering and filtering check out `tabs_order` param.
@@ -63,6 +64,11 @@ def _create_tabs(
         By default, tabs will be sorted alphabetically based on provided labels.
         This param can be also used as a filtering mechanism - only labels provided in `tabs_order` param will be displayed as tabs.
         Defaults to None.
+
+    Returns
+    -------
+    str
+        HTML code for class tabs viewer control.
     """  # NOQA E501
 
     tab_layout_id = shortuuid.uuid()
@@ -144,7 +150,7 @@ def _create_tabs(
 
 
 def _create_html_viewer(
-        html: str):
+        html: str) -> str:
     """Creates HTML code for HTML previewer.
 
     Parameters
@@ -235,7 +241,7 @@ def _create_img(
         width: int,
         grid_style_uuid: str,
         custom_text: str = None,
-        force_b64: bool = False):
+        force_b64: bool = False) -> str:
     """Helper function to generate HTML code for displaying images along with corresponding texts.
 
     Parameters
@@ -272,11 +278,14 @@ def _create_img(
     use_b64 = True
     # if image is a string (URL) display its URL
     if type(image) is str or type(image) is str_:
-        img_html += '<h4 style="font-size: 9px; padding-left: 10px; padding-right: 10px; width: 95%%; word-wrap: break-word; white-space: normal;">%s</h4>' % (image)  # NOQA E501
+        matches = ['http:', 'https:', 'ftp:', 'www.']
+        if not any(image.lower().startswith(x) for x in matches):
+            image = os.path.relpath(image)
+        img_html += '<h4 style="font-size: 9px; margin-left: 5px; margin-right: 5px; word-wrap: break-word; white-space: normal;">%s</h4>\n' % (image)  # NOQA E501
         if not force_b64:
             use_b64 = False
             img_html += '<img src="%s"/>' % image
-        elif "http" in image:
+        elif any(image.lower().startswith(x) for x in matches):
             print("WARNING: Current implementation doesn't allow to use 'force_b64=True' with images as remote URLs. Ignoring 'force_b64' flag")  # NOQA E501
             use_b64 = False
 
@@ -309,7 +318,7 @@ def _create_imgs_grid(
         max_images: int = 30,
         img_width: int = 150,
         zoom_scale: float = 2.5,
-        force_b64: bool = False):
+        force_b64: bool = False) -> str:
     """
     Creates HTML code for displaying images provided in `images` param in grid-like layout.
     Check optional params for max number of images to plot, labels and custom texts to add to each image, image width and other options.
@@ -355,7 +364,7 @@ def _create_imgs_grid(
     # create code with style definitions
     html, grid_style_uuid = _get_default_style(img_width, zoom_scale)
 
-    html += '<div id="ipyplot-imgs-container-div-%s">' % grid_style_uuid
+    html += '<div class="ipyplot-imgs-container-div-%s">' % grid_style_uuid
     html += ''.join([
         _create_img(
             x, width=img_width, label=y,
@@ -370,7 +379,7 @@ def _create_imgs_grid(
     return html
 
 
-def _get_default_style(img_width: int, zoom_scale: float):
+def _get_default_style(img_width: int, zoom_scale: float) -> str:
     """Creates HTML code with default style definitions required for elements to be properly displayed
 
     Parameters
@@ -389,13 +398,11 @@ def _get_default_style(img_width: int, zoom_scale: float):
     style_uuid = shortuuid.uuid()
     html = """
         <style>
-        #ipyplot-imgs-container-div-%(0)s {
+        div.ipyplot-imgs-container-div-%(0)s {
             width: 100%%;
             height: 100%%;
             margin: 0%%;
-            overflow: auto;
             position: relative;
-            overflow-y: scroll;
         }
 
         div.ipyplot-placeholder-div-%(0)s {
