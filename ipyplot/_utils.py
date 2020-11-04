@@ -23,7 +23,7 @@ def _find_and_replace_html_for_imgkit(html: str) -> str:
     return re.sub(
         pattern,
         lambda x: '<img src="%s"' % _to_imgkit_path(
-            x[0].split('="')[1].replace('"', '')),
+            x.group().split('="')[1].replace('"', '')),
         html)
 
 

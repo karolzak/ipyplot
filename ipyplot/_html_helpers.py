@@ -27,17 +27,27 @@ def _html_to_image(html, out_img):
         os.makedirs(os.path.dirname(out_img), exist_ok=True)
 
     html = _find_and_replace_html_for_imgkit(html)
-
-    # path_wkthmltoimage = r'C:/Program Files/wkhtmltopdf/bin/wkhtmltoimage.exe'
-    # config = imgkit.config(wkhtmltoimage=path_wkthmltoimage)
     options = {
+        # 'xvfb': '',
         'enable-local-file-access': '',
     }
-    print("Saving output as image under: ", out_img)
-    imgkit.from_string(
-        html, out_img,
-        # config=config,
-        options=options)
+    saving = True
+    while saving:
+        print("Saving output as image under: ", out_img)
+
+        try:
+            path_wkthmltoimage = r'C:/Program Files/wkhtmltopdf/bin/wkhtmltoimage.exe'
+            config = imgkit.config(wkhtmltoimage=path_wkthmltoimage)
+            imgkit.from_string(
+                html, out_img,
+                config=config,
+                options=options)
+        except Exception as e:
+            if "You need to install xvfb" in str(e):
+                options['xvfb'] = ''
+                continue
+            raise
+        saving = False
 
 
 def _create_tabs(
