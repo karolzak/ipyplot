@@ -1,5 +1,5 @@
 IPython
-Numpy==1.19.3
+Numpy
 pillow
 bump2version
 pytest
