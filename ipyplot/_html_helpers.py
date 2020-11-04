@@ -36,11 +36,11 @@ def _html_to_image(html, out_img):
         print("Saving output as image under: ", out_img)
 
         try:
-            path_wkthmltoimage = r'C:/Program Files/wkhtmltopdf/bin/wkhtmltoimage.exe'
-            config = imgkit.config(wkhtmltoimage=path_wkthmltoimage)
+            # path_wkthmltoimage = r'C:/Program Files/wkhtmltopdf/bin/wkhtmltoimage.exe'
+            # config = imgkit.config(wkhtmltoimage=path_wkthmltoimage)
             imgkit.from_string(
                 html, out_img,
-                config=config,
+                # config=config,
                 options=options)
         except Exception as e:
             if "You need to install xvfb" in str(e):
