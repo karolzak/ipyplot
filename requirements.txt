@@ -6,3 +6,4 @@ pytest
 pytest-cov
 shortuuid
 pandas
+imgkit

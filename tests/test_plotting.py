@@ -1,11 +1,13 @@
+import os
 import sys
-from typing import Sequence
+import tempfile
 
 import numpy as np
 import pandas as pd
 import pytest
 from IPython.display import HTML
 from PIL import Image
+
 
 sys.path.append(".")
 sys.path.append("../.")
@@ -22,12 +24,16 @@ BASE_INTERNET_URLS = [
 ]
 
 BASE_LOCAL_URLS = [
-    "docs/example1-tabs.jpg",
-    "docs/example2-images.jpg",
-    "docs/example3-classes.jpg",
+    "tests/data/21HnHt+LMDL._AC_US436_QL65_.jpg",
+    "tests/data/41edw+BCUjL._AC_US436_QL65_.jpg",
+    "tests/data/100205.jpeg",
 ]
 
+TEST_OUTPUT_IMG = "tests/data/out_img.jpg"
+TEST_OUTPUT_IMG_B64 = "tests/data/out_img_b64.jpg"
+
 LOCAL_URLS_AS_PIL = list([Image.open(url) for url in BASE_LOCAL_URLS])
+LOCAL_URLS_AS_NP = list([np.asarray(img) for img in LOCAL_URLS_AS_PIL])
 
 LABELS = [
     None,
@@ -38,6 +44,7 @@ LABELS = [
 
 TEST_DATA = [
     # (imgs, labels, custom_texts)
+    (BASE_LOCAL_URLS, LABELS[1], LABELS[0]),
     (LOCAL_URLS_AS_PIL, LABELS[1], LABELS[0]),
     (BASE_NP_IMGS, LABELS[1], LABELS[0]),
     (pd.Series(BASE_NP_IMGS), LABELS[1], LABELS[0]),
@@ -49,6 +56,19 @@ TEST_DATA = [
     (LOCAL_URLS_AS_PIL, LABELS[1], LABELS[1]),
     (LOCAL_URLS_AS_PIL, LABELS[2], LABELS[2]),
     (LOCAL_URLS_AS_PIL, LABELS[3], LABELS[3]),
+    ([os.path.abspath(x) for x in BASE_LOCAL_URLS], LABELS[1], LABELS[0]),
+]
+
+TEST_SAVE_OUTPUT_DATA = [
+    # (imgs, output_img_path, b64, out)
+    (BASE_LOCAL_URLS, "out.jpg", False, TEST_OUTPUT_IMG),
+    (BASE_LOCAL_URLS, "out.jpeg", False, TEST_OUTPUT_IMG),
+    (BASE_LOCAL_URLS, "out/out.jpg", False, TEST_OUTPUT_IMG),
+    (BASE_LOCAL_URLS, "out.jpg", True, TEST_OUTPUT_IMG_B64),
+    (LOCAL_URLS_AS_PIL, "out.jpg", True, TEST_OUTPUT_IMG_B64),
+    (LOCAL_URLS_AS_NP, "out.jpg", True, TEST_OUTPUT_IMG_B64),
+    (BASE_INTERNET_URLS, "out.jpg", True, TEST_OUTPUT_IMG_B64),
+    ([os.path.abspath(x) for x in BASE_LOCAL_URLS], "out.jpg", False, TEST_OUTPUT_IMG),  # NOQA E501
 ]
 
 
@@ -109,3 +129,31 @@ def test_plot_class_representations(
         assert("Ignoring 'force_b64' flag" in captured.out)
 
     assert(str(HTML).split("'")[1] in captured.out)
+
+
+@pytest.mark.parametrize(
+    "imgs, output_img_path, b64, exp_output",
+    TEST_SAVE_OUTPUT_DATA)
+def test_saving_output(
+        imgs, output_img_path, b64, exp_output):
+    with tempfile.TemporaryDirectory() as temp_dir:
+        test_out_path = os.path.join(temp_dir, output_img_path)
+        ipyplot.plot_images(
+            imgs,
+            force_b64=b64,
+            output_img_path=test_out_path)
+
+        assert os.path.exists(test_out_path)
+        assert os.stat(test_out_path).st_size > 10000
+        # assert filecmp.cmp(exp_output, test_out_path, shallow=False)
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        test_out_path = os.path.join(temp_dir, output_img_path)
+        ipyplot.plot_class_representations(
+            imgs,
+            labels=[0, 1, 2],
+            force_b64=b64,
+            output_img_path=test_out_path)
+        assert os.path.exists(test_out_path)
+        assert os.stat(test_out_path).st_size > 10000
+        # assert filecmp.cmp(exp_output, test_out_path, shallow=False)

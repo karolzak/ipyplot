@@ -33,7 +33,9 @@ def _rescale_to_width(
     return rescaled_img
 
 
-def _scale_wh_by_target_width(w: int, h: int, target_width: int):
+def _scale_wh_by_target_width(
+        w: int, h: int,
+        target_width: int) -> (int, int):
     """Helper functions for scaling width and height based on target width.
 
     Parameters
@@ -56,7 +58,7 @@ def _scale_wh_by_target_width(w: int, h: int, target_width: int):
 
 def _img_to_base64(
         image: str or str_ or np.ndarray or PIL.Image,
-        target_width: int = None):
+        target_width: int = None) -> str:
     """Converts image to base64 string.
     Use `target_width` param to rescale the image to specific width - keeps original size by default.
 
