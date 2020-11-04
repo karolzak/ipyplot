@@ -7,7 +7,7 @@ import numpy as _np
 from typing import Sequence
 
 from ._html_helpers import (
-    _display_html, _create_tabs, _create_imgs_grid)
+    _display_html, _create_tabs, _create_imgs_grid, _html_to_image)
 from ._utils import _get_class_representations, _seq2arr
 
 
@@ -88,7 +88,8 @@ def plot_images(
         max_images: int = 30,
         img_width: int = 150,
         zoom_scale: float = 2.5,
-        force_b64: bool = False):
+        force_b64: bool = False,
+        output_img_path: str = None):
     """
     Simply displays images provided in `images` param in grid-like layout.
     Check optional params for max number of images to plot, labels and custom texts to add to each image, image width and other options.
@@ -143,6 +144,9 @@ def plot_images(
         zoom_scale=zoom_scale,
         force_b64=force_b64)
 
+    if output_img_path is not None:
+        _html_to_image(html, output_img_path)
+
     _display_html(html)
 
 
@@ -153,7 +157,8 @@ def plot_class_representations(
         zoom_scale: float = 2.5,
         force_b64: bool = False,
         ignore_labels: Sequence[str or int] = None,
-        labels_order: Sequence[str or int] = None):
+        labels_order: Sequence[str or int] = None,
+        output_img_path: str = None):
     """
     Displays single image (first occurence for each class) for each label/class in grid-like layout.
     Check optional params for labels filtering, ignoring and ordering, image width and other options.
@@ -208,4 +213,5 @@ def plot_class_representations(
         max_images=len(images),
         img_width=img_width,
         zoom_scale=zoom_scale,
-        force_b64=force_b64)
+        force_b64=force_b64,
+        output_img_path=output_img_path)

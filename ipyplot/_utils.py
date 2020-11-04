@@ -1,18 +1,37 @@
 """
 Misc utils for IPyPlot package.
 """
-
+import os
+import re
 from typing import Sequence
 
 import numpy as np
 from PIL import Image
 
 
+def _to_imgkit_path(img_path: str) -> str:
+    # matches = ['http:', 'https:', 'ftp:', 'www.']
+    # if not any(x in img_path for x in matches):
+    #     if '.' in img_path:
+    return "file:///" + os.path.abspath(img_path)
+    # return img_path
+
+
+def _find_and_replace_html_for_imgkit(html: str) -> str:
+    # pattern = r"<img src=\"[/\.].*\""
+    pattern = r"<img src=\"(?!http:|https:|data:|www.|ftp:|ftps:).*\""
+    return re.sub(
+        pattern,
+        lambda x: '<img src="%s"' % _to_imgkit_path(
+            x[0].split('="')[1].replace('"', '')),
+        html)
+
+
 def _get_class_representations(
         images: Sequence[object],
         labels: Sequence[str or int],
         ignore_labels: Sequence[str or int] = None,
-        labels_order: Sequence[str or int] = None):
+        labels_order: Sequence[str or int] = None) -> (np.ndarray, np.ndarray):
     """Returns a list of images (and labels) representing first occurance of each label/class type.
     Check optional params for labels ignoring and ordering.
     For labels filtering refer to `labels_order` param.
@@ -77,7 +96,7 @@ def _get_class_representations(
     return out_images, out_labels
 
 
-def _seq2arr(seq: Sequence[str or int or object]):
+def _seq2arr(seq: Sequence[str or int or object]) -> np.ndarray:
     """Convert sequence to numpy.ndarray.
 
     Parameters

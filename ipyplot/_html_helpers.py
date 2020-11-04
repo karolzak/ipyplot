@@ -6,16 +6,35 @@ required for displaying images, grid/tab layout and general styling.
 import os
 from typing import Sequence
 
+import imgkit
 import numpy as np
 import shortuuid
 from numpy import str_
 
 from ._img_helpers import _img_to_base64
+from ._utils import (
+    _find_and_replace_html_for_imgkit,
+    _to_imgkit_path)
 
 try:
     from IPython.display import display, HTML
 except Exception:  # pragma: no cover
     raise Exception('IPython not detected. Plotting without IPython is not possible')  # NOQA E501
+
+
+def _html_to_image(html, out_img):
+    if os.path.dirname(out_img) != '':
+        os.makedirs(os.path.dirname(out_img), exist_ok=True)
+
+    html = _find_and_replace_html_for_imgkit(html)
+
+    path_wkthmltoimage = r'C:/Program Files/wkhtmltopdf/bin/wkhtmltoimage.exe'
+    config = imgkit.config(wkhtmltoimage=path_wkthmltoimage)
+    options = {
+        'enable-local-file-access': '',
+    }
+    print("Saving output as image under: ", out_img)
+    imgkit.from_string(html, out_img, config=config, options=options)
 
 
 def _create_tabs(
