@@ -28,13 +28,16 @@ def _html_to_image(html, out_img):
 
     html = _find_and_replace_html_for_imgkit(html)
 
-    path_wkthmltoimage = r'C:/Program Files/wkhtmltopdf/bin/wkhtmltoimage.exe'
-    config = imgkit.config(wkhtmltoimage=path_wkthmltoimage)
+    # path_wkthmltoimage = r'C:/Program Files/wkhtmltopdf/bin/wkhtmltoimage.exe'
+    # config = imgkit.config(wkhtmltoimage=path_wkthmltoimage)
     options = {
         'enable-local-file-access': '',
     }
     print("Saving output as image under: ", out_img)
-    imgkit.from_string(html, out_img, config=config, options=options)
+    imgkit.from_string(
+        html, out_img,
+        # config=config,
+        options=options)
 
 
 def _create_tabs(

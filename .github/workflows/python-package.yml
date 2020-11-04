@@ -19,21 +19,40 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+
+    - name:  Install wkhtmltopdf
+      run:   |
+              if [ "$RUNNER_OS" == "Linux" ]; then
+                  # apt install important_linux_software
+                  sudo apt-get install xvfb libfontconfig wkhtmltopdf
+              elif [ "$RUNNER_OS" == "Windows" ]; then
+                  choco install wkhtmltopdf
+              elif [ "$RUNNER_OS" == "macOS" ]; then
+                  brew cask install wkhtmltopdf
+              else
+                  echo "$RUNNER_OS not supported"
+                  exit 1
+              fi
+      shell: bash
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install flake8 pytest
         pip install -r requirements.txt
+
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
     - name: Test with pytest
       run: |
         pytest
