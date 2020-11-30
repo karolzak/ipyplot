@@ -294,7 +294,7 @@ def _create_img(
 
     if inline_svg:
         url_svg = urllib.parse.quote(open(image,'r').read())
-        img_html += f'<img src="data:image/svg+xml,{url_svg:s}">'
+        img_html += '<img src="data:image/svg+xml,%s">' % url_svg
 
     html = """
     <div class="ipyplot-placeholder-div-%(0)s">
