@@ -8,6 +8,7 @@ from typing import Sequence
 import numpy as np
 import shortuuid
 from numpy import str_
+import urllib
 
 from ._img_helpers import _img_to_base64
 
@@ -228,14 +229,14 @@ def _display_html(html: str):
     display(HTML(_create_html_viewer(html)))
     return display(HTML(html))
 
-
 def _create_img(
         image: str or object,
         label: str or int,
         width: int,
         grid_style_uuid: str,
         custom_text: str = None,
-        force_b64: bool = False):
+        force_b64: bool = False,
+        inline_svg: bool = True):
     """Helper function to generate HTML code for displaying images along with corresponding texts.
 
     Parameters
@@ -256,7 +257,10 @@ def _create_img(
         Do mind that using b64 conversion vs reading directly from filepath will be slower.
         You might need to set this to `True` in environments like Google colab.
         Defaults to False.
-
+    inline_svg : bool, optional
+        You can force inlining svg images instead of reading them directly from filepaths with HTML.
+        Defaults to False.
+        
     Returns
     -------
     str
@@ -272,8 +276,11 @@ def _create_img(
     use_b64 = True
     # if image is a string (URL) display its URL
     if type(image) is str or type(image) is str_:
+        inline_svg = inline_svg and image[-4:]==".svg"
+        if inline_svg:
+            use_b64 = False
         img_html += '<h4 style="font-size: 9px; padding-left: 10px; padding-right: 10px; width: 95%%; word-wrap: break-word; white-space: normal;">%s</h4>' % (image)  # NOQA E501
-        if not force_b64:
+        if not force_b64 and not inline_svg:
             use_b64 = False
             img_html += '<img src="%s"/>' % image
         elif "http" in image:
@@ -284,6 +291,10 @@ def _create_img(
     # that's why it's necessary to use conversion to b64
     if use_b64:
         img_html += '<img src="data:image/png;base64,%s"/>' % _img_to_base64(image, width)  # NOQA E501
+
+    if inline_svg:
+        url_svg = urllib.parse.quote(open(image,'r').read())
+        img_html += '<img src="data:image/svg+xml,%s">' % url_svg
 
     html = """
     <div class="ipyplot-placeholder-div-%(0)s">
@@ -300,7 +311,6 @@ def _create_img(
     </div>
     """ % {'0': grid_style_uuid, '1': img_uuid, '2': label, '3': img_html}  # NOQA E501
     return html
-
 
 def _create_imgs_grid(
         images: Sequence[object],
