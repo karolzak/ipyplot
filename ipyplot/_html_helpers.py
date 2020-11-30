@@ -274,11 +274,11 @@ def _create_img(
         img_html += '<h4 style="font-size: 12px; word-wrap: break-word;">%s</h4>' % str(custom_text)  # NOQA E501
 
     use_b64 = True
-    inline_svg = (inline_svg and image[-4:]==".svg")
-    if inline_svg:
-        use_b64 = False
     # if image is a string (URL) display its URL
     if type(image) is str or type(image) is str_:
+        inline_svg = inline_svg and image[-4:]==".svg"
+        if inline_svg:
+            use_b64 = False
         img_html += '<h4 style="font-size: 9px; padding-left: 10px; padding-right: 10px; width: 95%%; word-wrap: break-word; white-space: normal;">%s</h4>' % (image)  # NOQA E501
         if not force_b64 and not inline_svg:
             use_b64 = False
@@ -293,8 +293,8 @@ def _create_img(
         img_html += '<img src="data:image/png;base64,%s"/>' % _img_to_base64(image, width)  # NOQA E501
 
     if inline_svg:
-        string = urllib.parse.quote(open(image,'r').read())
-        img_html += f'<img src="data:image/svg+xml,{string:s}">'
+        url_svg = urllib.parse.quote(open(image,'r').read())
+        img_html += f'<img src="data:image/svg+xml,{url_svg:s}">'
 
     html = """
     <div class="ipyplot-placeholder-div-%(0)s">
