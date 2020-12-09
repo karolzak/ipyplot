@@ -18,6 +18,7 @@ def plot_class_tabs(
         max_imgs_per_tab: int = 30,
         img_width: int = 150,
         zoom_scale: float = 2.5,
+        show_url: bool = True,
         force_b64: bool = False,
         tabs_order: Sequence[str or int] = None):
     """
@@ -48,6 +49,8 @@ def plot_class_tabs(
         Scale for zoom-in-on-click feature.
         Best to keep between 1.0~5.0.
         Defaults to 2.5.
+    show_url : bool, optional
+        Defines if the urls are displayed as text above the images. 
     force_b64 : bool, optional
         You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  
         Do mind that using b64 conversion vs reading directly from filepath will be slower.
@@ -75,6 +78,7 @@ def plot_class_tabs(
         max_imgs_per_tab=max_imgs_per_tab,
         img_width=img_width,
         zoom_scale=zoom_scale,
+        show_url=show_url,
         force_b64=force_b64,
         tabs_order=tabs_order)
 
@@ -88,6 +92,7 @@ def plot_images(
         max_images: int = 30,
         img_width: int = 150,
         zoom_scale: float = 2.5,
+        show_url: bool = True,
         force_b64: bool = False):
     """
     Simply displays images provided in `images` param in grid-like layout.
@@ -118,6 +123,8 @@ def plot_images(
         Scale for zoom-in-on-click feature.
         Best to keep between 1.0~5.0.
         Defaults to 2.5.
+    show_url : bool, optional
+        Defines if the urls are displayed as text above the images. 
     force_b64 : bool, optional
         You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  
         Do mind that using b64 conversion vs reading directly from filepath will be slower.
@@ -141,6 +148,7 @@ def plot_images(
         max_images=max_images,
         img_width=img_width,
         zoom_scale=zoom_scale,
+        show_url=show_url,
         force_b64=force_b64)
 
     _display_html(html)
@@ -151,6 +159,7 @@ def plot_class_representations(
         labels: Sequence[str or int],
         img_width: int = 150,
         zoom_scale: float = 2.5,
+        show_url: bool = True,
         force_b64: bool = False,
         ignore_labels: Sequence[str or int] = None,
         labels_order: Sequence[str or int] = None):
@@ -176,6 +185,8 @@ def plot_class_representations(
         Scale for zoom-in-on-click feature.
         Best to keep between 1.0~5.0.
         Defaults to 2.5.
+    show_url : bool, optional
+        Defines if the urls are displayed as text above the images. 
     force_b64 : bool, optional
         You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  
         Do mind that using b64 conversion vs reading directly from filepath will be slower.
@@ -208,4 +219,5 @@ def plot_class_representations(
         max_images=len(images),
         img_width=img_width,
         zoom_scale=zoom_scale,
+        show_url=show_url,
         force_b64=force_b64)

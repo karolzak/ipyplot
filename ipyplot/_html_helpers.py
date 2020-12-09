@@ -24,6 +24,7 @@ def _create_tabs(
         max_imgs_per_tab: int = 30,
         img_width: int = 150,
         zoom_scale: float = 2.5,
+        show_url: bool = True,
         force_b64: bool = False,
         tabs_order: Sequence[str or int] = None):
     """
@@ -53,6 +54,8 @@ def _create_tabs(
         Scale for zoom-in-on-click feature.
         Best to keep between 1.0~5.0.
         Defaults to 2.5.
+    show_url : bool, optional
+        Defines if the urls are displayed as text above the images. 
     force_b64 : bool, optional
         You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  
         Do mind that using b64 conversion vs reading directly from filepath will be slower.
@@ -134,6 +137,7 @@ def _create_tabs(
             img_width=img_width,
             zoom_scale=zoom_scale,
             custom_texts=custom_texts[tab_imgs_mask] if custom_texts is not None else None,  # NOQA E501
+            show_url=show_url,
             force_b64=force_b64)
 
         html += '</div>'
@@ -235,6 +239,7 @@ def _create_img(
         width: int,
         grid_style_uuid: str,
         custom_text: str = None,
+        show_url: bool = True,
         force_b64: bool = False):
     """Helper function to generate HTML code for displaying images along with corresponding texts.
 
@@ -251,6 +256,8 @@ def _create_img(
     custom_text : str, optional
         Additional text to be displayed above the image but below the label name.
         Defaults to None.
+    show_url : bool, optional
+        Defines if the urls are displayed as text above the images. 
     force_b64 : bool, optional
         You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  
         Do mind that using b64 conversion vs reading directly from filepath will be slower.
@@ -272,7 +279,8 @@ def _create_img(
     use_b64 = True
     # if image is a string (URL) display its URL
     if type(image) is str or type(image) is str_:
-        img_html += '<h4 style="font-size: 9px; padding-left: 10px; padding-right: 10px; width: 95%%; word-wrap: break-word; white-space: normal;">%s</h4>' % (image)  # NOQA E501
+        if show_url:
+            img_html += '<h4 style="font-size: 9px; padding-left: 10px; padding-right: 10px; width: 95%%; word-wrap: break-word; white-space: normal;">%s</h4>' % (image)  # NOQA E501
         if not force_b64:
             use_b64 = False
             img_html += '<img src="%s"/>' % image
@@ -309,6 +317,7 @@ def _create_imgs_grid(
         max_images: int = 30,
         img_width: int = 150,
         zoom_scale: float = 2.5,
+        show_url: bool = True,
         force_b64: bool = False):
     """
     Creates HTML code for displaying images provided in `images` param in grid-like layout.
@@ -337,6 +346,8 @@ def _create_imgs_grid(
         Scale for zoom-in-on-click feature.
         Best to keep between 1.0~5.0.
         Defaults to 2.5.
+    show_url : bool, optional
+        Defines if the urls are displayed as text above the images. 
     force_b64 : bool, optional
         You can force conversion of images to base64 instead of reading them directly from filepaths with HTML.  
         Do mind that using b64 conversion vs reading directly from filepath will be slower.
@@ -360,7 +371,8 @@ def _create_imgs_grid(
         _create_img(
             x, width=img_width, label=y,
             grid_style_uuid=grid_style_uuid,
-            custom_text=text, force_b64=force_b64
+            custom_text=text, show_url=show_url,
+            force_b64=force_b64
         )
         for x, y, text in zip(
             images[:max_images], labels[:max_images],
