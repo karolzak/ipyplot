@@ -6,7 +6,7 @@ with open("README.md") as f:
 
 setup(
     name="ipyplot",
-    version="1.1.0",
+    version="1.1.1",
     description="Simple package that leverages IPython and HTML for more efficient, reach and interactive plotting of images in Jupyter Notebooks",
     long_description=long_description,
     long_description_content_type="text/markdown",  # This is important!
