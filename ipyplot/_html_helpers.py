@@ -419,12 +419,12 @@ def _get_default_style(img_width: int, zoom_scale: float):
 
         div.ipyplot-content-div-%(0)s {
             width: %(1)spx;
-            background: var(--jp-layout-color0);
+            background: var(--jp-layout-color0, white);
             display: inline-block;
             vertical-align: top;
             text-align: center;
             position: relative;
-            border: var(--jp-border-width) solid var(--jp-cell-editor-border-color);
+            border: var(--jp-border-width, 2px) solid var(--jp-cell-editor-border-color, #ddd);
             top: 0;
             left: 0;
         }
