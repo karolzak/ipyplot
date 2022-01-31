@@ -23,6 +23,6 @@ if 'google.colab' in _sys.modules:  # pragma: no cover
         """
         WARNING! Google Colab Environment detected!
         You might encounter issues while running in Google Colab environment.
-        If images are not displaying properly please try setting `base_64` param to `True`.
+        If images are not displaying properly please try setting `force_b64` param to `True`.
         """  # NOQA E501
     )
