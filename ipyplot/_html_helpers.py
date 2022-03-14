@@ -5,6 +5,7 @@ required for displaying images, grid/tab layout and general styling.
 
 from typing import Sequence
 
+import os
 import numpy as np
 import shortuuid
 from numpy import str_
@@ -269,6 +270,8 @@ def _create_img(
     str
         Output HTML code.
     """  # NOQA E501
+    if width is None:
+        raise ValueError("`img_width` can't be `None`!")
 
     img_uuid = shortuuid.uuid()
 
