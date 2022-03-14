@@ -75,13 +75,44 @@ and use any of the available plotting functions shown below (notice execution ti
 
 #### Display a collection of images
 
+```python
+images = [
+    "docs/example1-tabs.jpg",
+    "docs/example2-images.jpg",
+    "docs/example3-classes.jpg",
+]
+ipyplot.plot_images(images, max_images=30, img_width=150)
+```
+
 ![](https://raw.githubusercontent.com/karolzak/ipyplot/master/docs/example2-images.jpg)
 
 #### Display class representations (first image for each unique label)
 
+```python
+images = [
+    "docs/example1-tabs.jpg",
+    "docs/example2-images.jpg",
+    "docs/example3-classes.jpg",
+]
+labels = ['label1', 'label2', 'label3']
+ipyplot.plot_class_representations(images, labels, img_width=150)
+
+```
+
 ![](https://raw.githubusercontent.com/karolzak/ipyplot/master/docs/example3-classes.jpg)
 
 #### Display images in separate, interactive tabs for each unique class
+
+```python
+images = [
+    "docs/example1-tabs.jpg",
+    "docs/example2-images.jpg",
+    "docs/example3-classes.jpg",
+]
+labels = ['class1', 'class2', 'class3']
+ipyplot.plot_class_tabs(images, labels, max_images_per_tab=10, img_width=150)
+
+```
 
 ![](https://raw.githubusercontent.com/karolzak/ipyplot/master/docs/example1-tabs.gif)
 
