@@ -277,8 +277,12 @@ def _create_img(
         img_html += '<h4 style="font-size: 12px; word-wrap: break-word;">%s</h4>' % str(custom_text)  # NOQA E501
 
     use_b64 = True
-    # if image is a string (URL) display its URL
+
     if type(image) is str or type(image) is str_:
+        # if image url is local path convert to relative path
+        matches = ['http:', 'https:', 'ftp:', 'www.', 'data:', 'file:']
+        if not any(image.lower().startswith(x) for x in matches):
+            image = os.path.relpath(image)
         if show_url:
             img_html += '<h4 style="font-size: 9px; padding-left: 10px; padding-right: 10px; width: 95%%; word-wrap: break-word; white-space: normal;">%s</h4>' % (image)  # NOQA E501
         if not force_b64:
