@@ -1,6 +1,7 @@
 import sys
 from typing import Sequence
 
+import os
 import numpy as np
 import pandas as pd
 import pytest
@@ -49,6 +50,8 @@ TEST_DATA = [
     (LOCAL_URLS_AS_PIL, LABELS[1], LABELS[1]),
     (LOCAL_URLS_AS_PIL, LABELS[2], LABELS[2]),
     (LOCAL_URLS_AS_PIL, LABELS[3], LABELS[3]),
+    # test case for abs to rel path convertion
+    ([os.path.abspath(pth) for pth in BASE_LOCAL_URLS], LABELS[1], LABELS[0]),
 ]
 
 
