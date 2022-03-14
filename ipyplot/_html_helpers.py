@@ -12,11 +12,6 @@ from numpy import str_
 
 from ._img_helpers import _img_to_base64
 
-try:
-    from IPython.display import display, HTML
-except Exception:  # pragma: no cover
-    raise Exception('IPython not detected. Plotting without IPython is not possible')  # NOQA E501
-
 
 def _create_tabs(
         images: Sequence[object],
@@ -237,9 +232,11 @@ def _display_html(html: str):
     """
     html_viewer = _create_html_viewer(html)
     if "DATABRICKS_RUNTIME_VERSION" in os.environ:
+        from IPython import displayHTML
         displayHTML(html_viewer)
         return displayHTML(html)
     else:
+        from IPython import display, HTML
         display(HTML(html_viewer))
         return display(HTML(html))
 
