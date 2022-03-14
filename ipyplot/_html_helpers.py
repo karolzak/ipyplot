@@ -27,7 +27,8 @@ def _create_tabs(
         zoom_scale: float = 2.5,
         show_url: bool = True,
         force_b64: bool = False,
-        tabs_order: Sequence[str or int] = None):
+        tabs_order: Sequence[str or int] = None,
+        resize_image: bool = False):
     """
     Generates HTML code required to display images in interactive tabs grouped by labels.
     For tabs ordering and filtering check out `tabs_order` param.
@@ -67,6 +68,10 @@ def _create_tabs(
         By default, tabs will be sorted alphabetically based on provided labels.
         This param can be also used as a filtering mechanism - only labels provided in `tabs_order` param will be displayed as tabs.
         Defaults to None.
+    resize_image : bool, optional
+        If `True` it will resize image based on `width` parameter.
+        Useful when working with big images and notebooks getting too big in terms of file size.
+        Defaults to `False`.
     """  # NOQA E501
 
     tab_layout_id = shortuuid.uuid()
@@ -241,7 +246,8 @@ def _create_img(
         grid_style_uuid: str,
         custom_text: str = None,
         show_url: bool = True,
-        force_b64: bool = False):
+        force_b64: bool = False,
+        resize_image: bool = False):
     """Helper function to generate HTML code for displaying images along with corresponding texts.
 
     Parameters
@@ -264,6 +270,10 @@ def _create_img(
         Do mind that using b64 conversion vs reading directly from filepath will be slower.
         You might need to set this to `True` in environments like Google colab.
         Defaults to False.
+    resize_image : bool, optional
+        If `True` it will resize image based on `width` parameter.
+        Useful when working with big images and notebooks getting too big in terms of file size.
+        Defaults to `False`.
 
     Returns
     -------
@@ -298,7 +308,9 @@ def _create_img(
     # if image is not a string it means its either PIL.Image or np.ndarray
     # that's why it's necessary to use conversion to b64
     if use_b64:
-        img_html += '<img src="data:image/png;base64,%s"/>' % _img_to_base64(image, width)  # NOQA E501
+        img_html += '<img src="data:image/png;base64,%s"/>' % _img_to_base64(
+            image,
+            width if resize_image else None)
 
     html = """
     <div class="ipyplot-placeholder-div-%(0)s">
@@ -325,7 +337,8 @@ def _create_imgs_grid(
         img_width: int = 150,
         zoom_scale: float = 2.5,
         show_url: bool = True,
-        force_b64: bool = False):
+        force_b64: bool = False,
+        resize_image: bool = False):
     """
     Creates HTML code for displaying images provided in `images` param in grid-like layout.
     Check optional params for max number of images to plot, labels and custom texts to add to each image, image width and other options.
@@ -360,6 +373,10 @@ def _create_imgs_grid(
         Do mind that using b64 conversion vs reading directly from filepath will be slower.
         You might need to set this to `True` in environments like Google colab.
         Defaults to False.
+    resize_image : bool, optional
+        If `True` it will resize image based on `width` parameter.
+        Useful when working with big images and notebooks getting too big in terms of file size.
+        Defaults to `False`.
 
     Returns
     -------
@@ -379,7 +396,8 @@ def _create_imgs_grid(
             x, width=img_width, label=y,
             grid_style_uuid=grid_style_uuid,
             custom_text=text, show_url=show_url,
-            force_b64=force_b64
+            force_b64=force_b64,
+            resize_image=resize_image
         )
         for x, y, text in zip(
             images[:max_images], labels[:max_images],

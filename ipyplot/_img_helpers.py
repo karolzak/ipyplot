@@ -65,7 +65,7 @@ def _img_to_base64(
     image : str or numpy.str_ or numpy.ndarray or PIL.Image
         Input image can be either PIL.Image, numpy.ndarray or simply a string URL to local or external image file.
     target_width : int, optional
-        Target width (in pixels) to rescale to.
+        Target width (in pixels) to rescale to. If None image will not be rescaled.
         Defaults to None.
 
     Returns
