@@ -235,8 +235,13 @@ def _display_html(html: str):
     handle: DisplayHandle
         Returns a handle on updatable displays
     """
-    display(HTML(_create_html_viewer(html)))
-    return display(HTML(html))
+    html_viewer = _create_html_viewer(html)
+    if "DATABRICKS_RUNTIME_VERSION" in os.environ:
+        displayHTML(html_viewer)
+        return displayHTML(html)
+    else:
+        display(HTML(html_viewer))
+        return display(HTML(html))
 
 
 def _create_img(
