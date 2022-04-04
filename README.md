@@ -110,7 +110,7 @@ images = [
     "docs/example3-classes.jpg",
 ]
 labels = ['class1', 'class2', 'class3']
-ipyplot.plot_class_tabs(images, labels, max_images_per_tab=10, img_width=150)
+ipyplot.plot_class_tabs(images, labels, max_imgs_per_tab=10, img_width=150)
 
 ```
 
