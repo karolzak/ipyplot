@@ -75,7 +75,7 @@ def _img_to_base64(
     """  # NOQA E501
     # if statements to convert image to PIL.Image object
     if isinstance(image, np.ndarray):
-        if image.dtype in [np.float, np.float32, np.float64]:
+        if image.dtype in [np.float32, np.float64]:
             # if dtype is float and values range is from 0.0 to 1.0
             # we need to normalize it to 0-255 range
             image = image * 255 if image.max() <= 1.0 else image

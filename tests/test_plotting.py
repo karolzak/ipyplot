@@ -45,7 +45,7 @@ TEST_DATA = [
     (np.asarray(BASE_NP_IMGS), LABELS[1], LABELS[0]),
     (np.asarray(BASE_INTERNET_URLS), LABELS[1], LABELS[0]),
     (np.asarray(BASE_LOCAL_URLS), LABELS[1], LABELS[0]),
-    (np.asarray(BASE_NP_IMGS, dtype=np.float) / 255, LABELS[1], LABELS[0]),
+    (np.asarray(BASE_NP_IMGS, dtype=np.float32) / 255, LABELS[1], LABELS[0]),
     (LOCAL_URLS_AS_PIL, LABELS[0], LABELS[0]),
     (LOCAL_URLS_AS_PIL, LABELS[1], LABELS[1]),
     (LOCAL_URLS_AS_PIL, LABELS[2], LABELS[2]),
