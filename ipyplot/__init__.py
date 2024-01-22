@@ -16,7 +16,7 @@ import sys as _sys
 from ._plotting import plot_images, plot_class_tabs, plot_class_representations
 
 __name__ = "IPyPlot"
-__version__ = "1.1.1"
+__version__ = "1.1.2"
 
 if 'google.colab' in _sys.modules:  # pragma: no cover
     print(
