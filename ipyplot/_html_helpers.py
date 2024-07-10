@@ -99,10 +99,12 @@ def _create_tabs(
                 border-radius: 4px 4px 0 0;
                 position: relative;
                 top: 1px;
+                display: inline-flex;
             }
             input.ipyplot-tab-%(0)s:checked + label.ipyplot-tab-label-%(0)s {
                 background: #FFF;
                 border-bottom: 1px solid transparent;
+                display: inline-flex;
             }
             input.ipyplot-tab-%(0)s ~ .tab {
                 border-top: 1px solid #999;
@@ -222,7 +224,7 @@ def _create_html_viewer(
     return html_viewer
 
 
-def _display_html(html: str):
+def _display_html(html: str, debug_html: bool = False):
     """Simply displays provided HTML string using IPython.display function.
 
     Parameters
@@ -235,7 +237,8 @@ def _display_html(html: str):
     handle: DisplayHandle
         Returns a handle on updatable displays
     """
-    display(HTML(_create_html_viewer(html)))
+    if debug_html:
+        display(HTML(_create_html_viewer(html)))
     return display(HTML(html))
 
 
